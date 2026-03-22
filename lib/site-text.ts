@@ -48,7 +48,8 @@ export const SITE_TEXT_DEFAULTS: Record<string, string> = {
   'home.carousel.title': 'מבצעים והמלצות מהקטלוג',
   'home.carousel.subtitle':
     'מחירים אטרקטיביים — הזדמנות לנסות שמן CBD או וריאציה חדשה. הזמינות לפי המלאי במערכת.',
-  'home.carousel.hint': 'גלילה אופקית — גררו עם האצבע או עם העכבר',
+  'home.carousel.hint':
+    'חיצים ונקודות לניווט, מעבר אוטומטי כל כמה שניות (עוצר במעבר עכבר), או גרירה אופקית.',
   'home.catalog.title': 'כל המוצרים בקטלוג',
   'home.catalog.subtitle': 'בחרו וריאציה — כל מוצר מקושר לדף SEO ייעודי',
   'home.delivery.title': 'משלוחים מהירים ודיסקרטיות',
