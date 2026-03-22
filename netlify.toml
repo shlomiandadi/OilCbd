@@ -1,0 +1,12 @@
+# Netlify — Next.js App Router
+# https://docs.netlify.com/frameworks/next-js/overview/
+
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # התאימו לגרסת Node בפרויקט (Prisma 5 + Next 16)
+  NODE_VERSION = "20"

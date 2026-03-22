@@ -21,20 +21,23 @@ npm run dev
 
 פתחו [http://localhost:3000](http://localhost:3000).
 
-## פרודקשן (Vercel + GitHub)
+## פרודקשן (Netlify + GitHub)
 
 1. דחפו את הריפו לגיטהאב (ראו למטה).
-2. ב־Vercel: **Import Project** מהריפו.
-3. ב־**Environment Variables** הוסיפו:
+2. ב־[Netlify](https://www.netlify.com/): **Add new site** → **Import an existing project** ובחרו את הריפו.
+3. Netlify יזהה את `netlify.toml` (פקודת בנייה `npm run build`, פלאגין Next.js).
+4. תחת **Site configuration → Environment variables** הוסיפו:
    - `DATABASE_URL` — מחרוזת החיבור ל־Postgres (מומלץ pooler, `sslmode=require`, ללא `channel_binding`).
-   - `NEXT_PUBLIC_SITE_URL` — כתובת האתר הסופית, למשל `https://your-app.vercel.app`.
-4. **Build Command:** `npm run build` (ברירת מחדל). **Install** מריץ `postinstall` → `prisma generate`.
-5. אחרי הדיפלוי הראשון, הריצו מול אותו DB (מהמחשב שלכם עם אותו `DATABASE_URL`):
+   - `NEXT_PUBLIC_SITE_URL` — כתובת האתר הסופית, למשל `https://your-site.netlify.app` (או הדומיין המותאם).
+5. `npm install` בבנייה מריץ `postinstall` → `prisma generate` (כולל מנוע Linux לסביבת Netlify — ראו `binaryTargets` ב־`schema.prisma`).
+6. אחרי הדיפלוי הראשון, הריצו **פעם אחת** מול אותו DB (מהמחשב שלכם עם אותו `DATABASE_URL`):
 
    ```bash
    npx prisma migrate deploy
    npx prisma db seed
    ```
+
+תיעוד Netlify ל־Next.js: [Frameworks — Next.js](https://docs.netlify.com/frameworks/next-js/overview/).
 
 ## חיבור לגיטהאב
 
