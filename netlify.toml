@@ -2,13 +2,13 @@
 # https://docs.netlify.com/frameworks/next-js/overview/
 #
 # חובה ב-UI: Environment variables → Production
-#   DATABASE_URL   — Neon "Pooled" (כתובת עם ‎-pooler‎)
-#   DIRECT_URL     — Neon "Direct" (בלי pooler) — חובה ל־prisma migrate deploy; מונע P1002 advisory lock
+#   DATABASE_URL — Neon pooled (עם ‎-pooler‎) לאפליקציה
+#   אופציונלי למיגרציה (אחד מספיק): DIRECT_URL או DATABASE_URL_UNPOOLED (Neon מגדיר לעתים אוטומטית)
 #   NEXT_PUBLIC_SITE_URL = https://YOUR-SITE.netlify.app
 
 [build]
-  # מיגרציות יוצרות את טבלאות ה-CMS (content_page, blog_post וכו׳) — דורש DATABASE_URL גם בשלב Build
-  command = "npx prisma migrate deploy && npm run build"
+  # מיגרציה עם URL ישיר אם קיים; אחרת אותו DATABASE_URL (ראו scripts/netlify-build.sh)
+  command = "sh scripts/netlify-build.sh"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
