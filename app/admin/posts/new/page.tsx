@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import { BlogPostForm } from '@/components/admin/BlogPostForm';
@@ -15,7 +15,7 @@ export default async function NewBlogPostPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/posts"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

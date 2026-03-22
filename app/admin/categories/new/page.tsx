@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import {
@@ -16,7 +16,7 @@ export default async function NewCategoryPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/categories"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

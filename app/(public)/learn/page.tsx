@@ -47,10 +47,10 @@ export default async function LearnIndexPage() {
       <main className="min-h-screen">
         <div className="container mx-auto max-w-4xl px-6 py-12">
           <Breadcrumbs items={crumbs} />
-          <h1 className="mb-4 text-3xl font-bold text-neutral-100">
+          <h1 className="mb-4 text-3xl font-bold text-brand-ink">
             מדריכים ומילות מפתח
           </h1>
-          <p className="mb-10 text-neutral-400">
+          <p className="mb-10 text-brand-ink-muted">
             עמודי תוכן סמכותיים — כותרות, תיאורים ופירורי לחם מותאמים ל־SEO. הנתונים
             נטענים ממסד הנתונים.
           </p>
@@ -59,12 +59,12 @@ export default async function LearnIndexPage() {
               <li key={p.id}>
                 <Link
                   href={`/learn/${p.slug}`}
-                  className="text-amber-500 hover:text-amber-400"
+                  className="font-medium text-brand-leaf hover:text-brand-leaf-dark"
                 >
                   {p.title}
                 </Link>
                 {p.category ? (
-                  <span className="mr-2 text-sm text-neutral-500">
+                  <span className="mr-2 text-sm text-brand-ink-muted">
                     · {p.category.name}
                   </span>
                 ) : null}

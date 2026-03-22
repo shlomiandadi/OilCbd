@@ -3,7 +3,12 @@ import {
   saveProductVariant,
   deleteProductVariantForm,
 } from '@/lib/admin/actions/products';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnPrimary,
+  adminBtnDanger,
+} from '@/components/admin/AdminField';
 
 export function ProductVariantForm({
   variant,
@@ -15,7 +20,7 @@ export function ProductVariantForm({
   const v = variant;
 
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900/40 p-4">
+    <div className="admin-card !p-5">
       <form action={saveProductVariant} className="space-y-3">
         {v ? <input type="hidden" name="id" value={v.id} /> : null}
         <input type="hidden" name="productId" value={productId} />
@@ -105,25 +110,19 @@ export function ProductVariantForm({
             type="checkbox"
             name="isActive"
             defaultChecked={v?.isActive !== false}
-            className="rounded border-neutral-600"
+            className="rounded border-brand-border text-brand-leaf"
           />
           פעיל
         </label>
-        <button
-          type="submit"
-          className="rounded bg-amber-600/90 px-4 py-2 text-sm text-neutral-950 hover:bg-amber-500"
-        >
+        <button type="submit" className={adminBtnPrimary + ' !text-sm'}>
           {v ? 'עדכן וריאציה' : 'הוסף וריאציה'}
         </button>
       </form>
       {v ? (
-        <form action={deleteProductVariantForm} className="mt-3">
+        <form action={deleteProductVariantForm} className="mt-4 border-t border-brand-border/60 pt-4">
           <input type="hidden" name="id" value={v.id} />
           <input type="hidden" name="productId" value={productId} />
-          <button
-            type="submit"
-            className="text-xs text-red-400 hover:text-red-300"
-          >
+          <button type="submit" className={adminBtnDanger}>
             מחק וריאציה
           </button>
         </form>

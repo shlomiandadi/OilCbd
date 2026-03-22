@@ -12,11 +12,11 @@ export default function CartControls() {
     <button
       type="button"
       onClick={openCart}
-      className="relative rounded-full border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-amber-500/50"
+      className="relative rounded-full border border-brand-border bg-white px-4 py-2 text-sm font-medium text-brand-ink shadow-sm transition-colors hover:border-brand-leaf/50 hover:text-brand-leaf"
     >
       עגלה
       {itemCount > 0 && (
-        <span className="absolute -left-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-neutral-950">
+        <span className="absolute -left-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-leaf px-1 text-xs font-bold text-white shadow-sm">
           {itemCount}
         </span>
       )}

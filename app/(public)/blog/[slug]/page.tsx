@@ -95,14 +95,14 @@ export default async function BlogPostPage({ params }: Props) {
             }
           />
           <header className="mb-10">
-            <p className="mb-2 text-sm text-amber-500/90">
+            <p className="mb-2 text-sm font-semibold text-brand-leaf">
               {post.category?.name ?? 'בלוג'}
             </p>
-            <h1 className="text-3xl font-bold text-neutral-100 md:text-4xl">
+            <h1 className="text-3xl font-bold text-brand-ink md:text-4xl">
               {post.title}
             </h1>
             {post.excerpt ? (
-              <p className="mt-4 text-lg text-neutral-400">{post.excerpt}</p>
+              <p className="mt-4 text-lg text-brand-ink-muted">{post.excerpt}</p>
             ) : null}
           </header>
           <MarkdownBody content={post.bodyMarkdown} />

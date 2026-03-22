@@ -23,7 +23,7 @@ function DesktopItem({ node }: { node: NavNode }) {
     return (
       <Link
         href={node.href}
-        className="rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+        className="rounded-xl px-3 py-2 text-sm font-medium text-brand-ink-muted transition hover:bg-brand-cream hover:text-brand-leaf"
       >
         {node.label}
       </Link>
@@ -34,7 +34,7 @@ function DesktopItem({ node }: { node: NavNode }) {
     <div className="group relative">
       <Link
         href={node.href}
-        className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+        className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-sm font-medium text-brand-ink-muted transition hover:bg-brand-cream hover:text-brand-leaf"
       >
         {node.label}
         <span className="text-[10px] opacity-70" aria-hidden>
@@ -42,22 +42,22 @@ function DesktopItem({ node }: { node: NavNode }) {
         </span>
       </Link>
       <div
-        className="invisible absolute right-0 top-full z-50 mt-1 max-h-[min(70vh,28rem)] w-[min(100vw-2rem,20rem)] overflow-y-auto rounded-xl border border-neutral-700 bg-neutral-950/98 py-2 opacity-0 shadow-2xl backdrop-blur-md transition group-hover:visible group-hover:opacity-100"
+        className="invisible absolute right-0 top-full z-50 mt-1 max-h-[min(70vh,28rem)] w-[min(100vw-2rem,20rem)] overflow-y-auto rounded-2xl border border-brand-border bg-white py-2 opacity-0 shadow-brand-soft ring-1 ring-black/5 transition group-hover:visible group-hover:opacity-100"
         role="menu"
       >
         <Link
           href={node.href}
-          className="block px-4 py-2.5 text-sm font-semibold text-amber-400 hover:bg-neutral-800/80"
+          className="block px-4 py-2.5 text-sm font-semibold text-brand-leaf hover:bg-brand-cream"
           role="menuitem"
         >
           עמוד מוקד: {node.label}
         </Link>
-        <div className="my-1 border-t border-neutral-800" />
+        <div className="my-1 border-t border-brand-border/80" />
         {node.children.map((c) => (
           <Link
             key={c.id}
             href={c.href}
-            className="block px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800/80 hover:text-amber-400"
+            className="block px-4 py-2 text-sm text-brand-ink-muted hover:bg-brand-cream hover:text-brand-leaf"
             role="menuitem"
           >
             {c.label}
@@ -110,11 +110,14 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
 
   const renderMobile = (nodes: NavNode[], depth = 0) =>
     nodes.map((node) => (
-      <div key={node.id} className={depth > 0 ? 'mr-2 border-r border-neutral-800 pr-2' : ''}>
+      <div
+        key={node.id}
+        className={depth > 0 ? 'mr-2 border-r border-brand-border pr-2' : ''}
+      >
         {node.children.length === 0 ? (
           <Link
             href={node.href}
-            className="block rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
+            className="block rounded-xl px-4 py-3 text-base font-medium text-brand-ink hover:bg-brand-cream"
             onClick={() => setOpen(false)}
           >
             {node.label}
@@ -123,18 +126,20 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
           <>
             <button
               type="button"
-              className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
+              className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-brand-ink hover:bg-brand-cream"
               aria-expanded={expandedMobile.has(node.id)}
               onClick={() => toggleMobile(node.id)}
             >
               {node.label}
-              <span className="text-xs text-neutral-500">{expandedMobile.has(node.id) ? '▴' : '▾'}</span>
+              <span className="text-xs text-brand-ink-muted">
+                {expandedMobile.has(node.id) ? '▴' : '▾'}
+              </span>
             </button>
             {expandedMobile.has(node.id) ? (
               <div className="mt-1 space-y-1">
                 <Link
                   href={node.href}
-                  className="block rounded-lg px-4 py-2 text-sm font-semibold text-amber-500/90 hover:bg-neutral-800/80"
+                  className="block rounded-lg px-4 py-2 text-sm font-semibold text-brand-leaf hover:bg-brand-cream"
                   onClick={() => setOpen(false)}
                 >
                   עמוד מוקד: {node.label}
@@ -149,7 +154,7 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-amber-500/10 bg-neutral-950/85 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-brand-border/70 bg-white/90 shadow-brand-soft backdrop-blur-xl">
         <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link
             href="/"
@@ -157,12 +162,12 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
             onClick={() => setOpen(false)}
           >
             <span
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-700 text-sm font-black text-neutral-950 shadow-lg shadow-amber-500/20"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-leaf to-brand-leaf-dark text-sm font-black text-white shadow-md shadow-brand-leaf/25"
               aria-hidden
             >
               {brandInitials.slice(0, 3)}
             </span>
-            <span className="text-lg font-bold tracking-tight text-neutral-50 transition group-hover:text-amber-400 sm:text-xl">
+            <span className="text-lg font-bold tracking-tight text-brand-ink transition group-hover:text-brand-leaf sm:text-xl">
               {brandName}
             </span>
           </Link>
@@ -176,7 +181,7 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
             ))}
             <Link
               href={ctaCheckoutHref}
-              className="mr-1 rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+              className="mr-1 rounded-xl px-3 py-2 text-sm font-medium text-brand-ink-muted transition hover:bg-brand-cream hover:text-brand-leaf"
             >
               {ctaCheckout}
             </Link>
@@ -185,20 +190,20 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href={ctaCatalogHref}
-              className="hidden rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-400 transition hover:border-amber-400 hover:bg-amber-500/20 lg:inline-flex"
+              className="hidden rounded-full border border-brand-leaf/35 bg-brand-cream px-4 py-2 text-sm font-semibold text-brand-leaf-dark transition hover:border-brand-leaf hover:bg-white lg:inline-flex"
             >
               {ctaCatalog}
             </Link>
             <Link
               href={ctaCheckoutHref}
-              className="hidden rounded-full bg-gradient-to-l from-amber-500 to-amber-600 px-4 py-2 text-sm font-bold text-neutral-950 shadow-md shadow-amber-500/25 transition hover:brightness-110 sm:inline-flex"
+              className="hidden rounded-full bg-gradient-to-l from-brand-leaf to-brand-leaf-dark px-4 py-2 text-sm font-bold text-white shadow-md shadow-brand-leaf/25 transition hover:brightness-105 sm:inline-flex"
             >
               {ctaCheckout}
             </Link>
             <CartControls />
             <button
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-700 bg-neutral-900/80 text-neutral-200 md:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-brand-border bg-white text-brand-ink shadow-sm md:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
               onClick={() => setOpen((v) => !v)}
@@ -220,19 +225,19 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
 
       <div
         id="mobile-nav"
-        className={`fixed inset-0 z-30 bg-black/60 backdrop-blur-sm transition-opacity md:hidden ${
+        className={`fixed inset-0 z-30 bg-brand-ink/25 backdrop-blur-sm transition-opacity md:hidden ${
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
         aria-hidden={!open}
         onClick={() => setOpen(false)}
       />
       <div
-        className={`fixed inset-y-0 right-0 z-40 flex w-[min(100vw-2rem,22rem)] flex-col border-l border-neutral-800 bg-neutral-950 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed inset-y-0 right-0 z-40 flex w-[min(100vw-2rem,22rem)] flex-col border-l border-brand-border bg-white shadow-2xl transition-transform duration-300 ease-out md:hidden ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="border-b border-neutral-800 px-5 py-4">
-          <p className="text-xs font-medium uppercase tracking-widest text-amber-500/90">
+        <div className="border-b border-brand-border px-5 py-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
             {mobileMenuTitle}
           </p>
         </div>
@@ -240,14 +245,14 @@ export default function SiteHeaderClient({ navTree, labels }: Props) {
           {renderMobile(navTree)}
           <Link
             href={ctaCheckoutHref}
-            className="rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
+            className="rounded-xl px-4 py-3 text-base font-medium text-brand-ink hover:bg-brand-cream"
             onClick={() => setOpen(false)}
           >
             {ctaCheckout}
           </Link>
           <Link
             href={ctaCatalogHref}
-            className="mt-2 rounded-xl bg-amber-500/15 px-4 py-3 text-center text-base font-bold text-amber-400"
+            className="mt-2 rounded-xl bg-brand-cream px-4 py-3 text-center text-base font-bold text-brand-leaf-dark ring-1 ring-brand-border"
             onClick={() => setOpen(false)}
           >
             {mobileCatalogCta}

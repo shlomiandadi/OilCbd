@@ -2,6 +2,11 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import { deleteContentCategoryForm } from '@/lib/admin/actions/categories';
+import {
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminBtnSecondary,
+} from '@/components/admin/AdminField';
 
 export default async function AdminCategoriesPage() {
   await requireAdmin();
@@ -11,53 +16,57 @@ export default async function AdminCategoriesPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">קטגוריות תוכן</h1>
-        <Link
-          href="/admin/categories/new"
-          className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-        >
-          קטגוריה חדשה
+    <div className="space-y-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
+            ארגון
+          </p>
+          <h1 className="mt-1 text-3xl font-bold text-brand-ink">קטגוריות תוכן</h1>
+          <p className="mt-2 max-w-xl text-sm text-brand-ink-muted">
+            קטגוריות ראשיות ותת־קטגוריות למדריכים ובלוג.
+          </p>
+        </div>
+        <Link href="/admin/categories/new" className={adminBtnPrimary}>
+          + קטגוריה חדשה
         </Link>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-neutral-800">
+
+      <div className="admin-table-wrap">
         <table className="w-full min-w-[560px] text-sm">
-          <thead className="border-b border-neutral-800 bg-neutral-900/60">
+          <thead className="border-b border-brand-border bg-brand-cream/80">
             <tr>
-              <th className="p-3 text-start text-neutral-400">שם</th>
-              <th className="p-3 text-start text-neutral-400">סלאג</th>
-              <th className="p-3 text-start text-neutral-400">אב</th>
-              <th className="p-3 text-end text-neutral-400">פעולות</th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                שם
+              </th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                סלאג
+              </th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                אב
+              </th>
+              <th className="p-4 text-end text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                פעולות
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-brand-border/50 bg-white">
             {categories.map((c) => (
-              <tr
-                key={c.id}
-                className="border-b border-neutral-800/80 hover:bg-neutral-900/30"
-              >
-                <td className="p-3">{c.name}</td>
-                <td className="p-3 font-mono text-xs text-neutral-400">
-                  {c.slug}
-                </td>
-                <td className="p-3 text-neutral-500">
-                  {c.parent?.name ?? '—'}
-                </td>
-                <td className="p-3 text-end">
+              <tr key={c.id} className="transition hover:bg-brand-cream/40">
+                <td className="p-4 font-medium text-brand-ink">{c.name}</td>
+                <td className="p-4 font-mono text-xs text-brand-ink-muted">{c.slug}</td>
+                <td className="p-4 text-brand-ink-muted">{c.parent?.name ?? '—'}</td>
+                <td className="p-4 text-end">
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
                       href={`/admin/categories/${c.id}`}
-                      className="rounded border border-neutral-600 px-2 py-1 text-xs hover:bg-neutral-800"
+                      className={adminBtnSecondary + ' !px-3 !py-1.5 !text-xs'}
                     >
                       עריכה
                     </Link>
                     <form action={deleteContentCategoryForm}>
                       <input type="hidden" name="id" value={c.id} />
-                      <button
-                        type="submit"
-                        className="rounded border border-red-900/60 px-2 py-1 text-xs text-red-300 hover:bg-red-950/40"
-                      >
+                      <button type="submit" className={adminBtnDanger}>
                         מחק
                       </button>
                     </form>

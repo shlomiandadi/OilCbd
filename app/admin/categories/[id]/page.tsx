@@ -23,7 +23,7 @@ export default async function EditCategoryPage({ params }: Props) {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/categories"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

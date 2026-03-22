@@ -7,9 +7,9 @@ type Props = {
 
 export default function DeliveryInfo({ title, bodyMarkdown }: Props) {
   return (
-    <div className="rounded-3xl border border-amber-500/15 bg-gradient-to-br from-neutral-900/80 to-neutral-950 p-8 shadow-inner shadow-black/20">
+    <div className="rounded-3xl border border-brand-border bg-gradient-to-br from-white to-brand-cream/60 p-8 shadow-brand-soft">
       <div className="flex flex-col items-center gap-8 md:flex-row md:items-start">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-500 ring-1 ring-amber-500/30">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-brand-leaf/10 text-brand-leaf ring-2 ring-brand-leaf/20">
           <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             <path
               strokeLinecap="round"
@@ -20,9 +20,9 @@ export default function DeliveryInfo({ title, bodyMarkdown }: Props) {
           </svg>
         </div>
         <div className="text-center md:text-right">
-          <h3 className="text-xl font-bold text-neutral-100 sm:text-2xl">{title}</h3>
+          <h3 className="text-xl font-bold text-brand-ink sm:text-2xl">{title}</h3>
           <div className="mt-3 max-w-2xl">
-            <MarkdownBody content={bodyMarkdown} className="prose-sm prose-p:text-neutral-400" />
+            <MarkdownBody content={bodyMarkdown} className="prose-sm" />
           </div>
         </div>
       </div>

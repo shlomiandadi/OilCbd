@@ -1,6 +1,10 @@
 import type { Product } from '@prisma/client';
 import { saveProduct } from '@/lib/admin/actions/products';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnPrimary,
+} from '@/components/admin/AdminField';
 
 function jsonPretty(v: unknown): string {
   if (v === null || v === undefined) return '';
@@ -22,7 +26,8 @@ export function ProductForm({ product }: { product: Product | null }) {
   const p = product;
 
   return (
-    <form action={saveProduct} className="mx-auto max-w-3xl space-y-5">
+    <div className="admin-card mx-auto max-w-3xl">
+    <form action={saveProduct} className="space-y-5">
       {p ? <input type="hidden" name="id" value={p.id} /> : null}
       <div className="grid gap-4 sm:grid-cols-2">
         <AdminField label="סלאג">
@@ -111,16 +116,14 @@ export function ProductForm({ product }: { product: Product | null }) {
           type="checkbox"
           name="isActive"
           defaultChecked={p?.isActive !== false}
-          className="rounded border-neutral-600"
+          className="rounded border-brand-border text-brand-leaf"
         />
         מוצר פעיל
       </label>
-      <button
-        type="submit"
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-      >
+      <button type="submit" className={adminBtnPrimary}>
         שמור מוצר
       </button>
     </form>
+    </div>
   );
 }

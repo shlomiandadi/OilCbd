@@ -1,6 +1,10 @@
 import type { ContentCategory } from '@prisma/client';
 import { saveContentCategory } from '@/lib/admin/actions/categories';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnPrimary,
+} from '@/components/admin/AdminField';
 
 type Opt = { id: string; label: string };
 
@@ -14,7 +18,8 @@ export function CategoryForm({
   const c = category;
 
   return (
-    <form action={saveContentCategory} className="mx-auto max-w-xl space-y-4">
+    <div className="admin-card mx-auto max-w-xl">
+    <form action={saveContentCategory} className="space-y-4">
       {c ? <input type="hidden" name="id" value={c.id} /> : null}
       <AdminField label="סלאג">
         <input
@@ -75,13 +80,11 @@ export function CategoryForm({
           ))}
         </select>
       </AdminField>
-      <button
-        type="submit"
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-      >
+      <button type="submit" className={adminBtnPrimary}>
         שמור
       </button>
     </form>
+    </div>
   );
 }
 

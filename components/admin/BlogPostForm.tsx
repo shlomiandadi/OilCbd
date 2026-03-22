@@ -1,6 +1,10 @@
 import type { BlogPost } from '@prisma/client';
 import { saveBlogPost } from '@/lib/admin/actions/blog-posts';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnPrimary,
+} from '@/components/admin/AdminField';
 
 function jsonPretty(v: unknown): string {
   if (v === null || v === undefined) return '';
@@ -30,7 +34,8 @@ export function BlogPostForm({
   const p = post;
 
   return (
-    <form action={saveBlogPost} className="mx-auto max-w-3xl space-y-5">
+    <div className="admin-card mx-auto max-w-3xl">
+    <form action={saveBlogPost} className="space-y-5">
       {p ? <input type="hidden" name="id" value={p.id} /> : null}
       <div className="grid gap-4 sm:grid-cols-2">
         <AdminField label="סלאג">
@@ -147,16 +152,14 @@ export function BlogPostForm({
           type="checkbox"
           name="isPublished"
           defaultChecked={p?.isPublished !== false}
-          className="rounded border-neutral-600"
+          className="rounded border-brand-border text-brand-leaf"
         />
         פורסם
       </label>
-      <button
-        type="submit"
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-      >
+      <button type="submit" className={adminBtnPrimary}>
         שמור
       </button>
     </form>
+    </div>
   );
 }

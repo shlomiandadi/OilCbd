@@ -73,14 +73,14 @@ export default function ContentPageArticle({ page }: Props) {
             }
           />
           <header className="mb-10">
-            <p className="mb-2 text-sm text-amber-500/90">
+            <p className="mb-2 text-sm font-semibold text-brand-leaf">
               {page.category?.name ?? 'מדריך'}
             </p>
-            <h1 className="text-3xl font-bold text-neutral-100 md:text-4xl">
+            <h1 className="text-3xl font-bold text-brand-ink md:text-4xl">
               {page.title}
             </h1>
             {page.excerpt ? (
-              <p className="mt-4 text-lg text-neutral-400">{page.excerpt}</p>
+              <p className="mt-4 text-lg text-brand-ink-muted">{page.excerpt}</p>
             ) : null}
           </header>
           <MarkdownBody content={page.bodyMarkdown} />

@@ -148,12 +148,12 @@ export default async function ProductPage({ params }: PageProps) {
         <article className="container mx-auto px-6 py-12 max-w-6xl">
           <Breadcrumbs items={crumbs.length > 0 ? crumbs : [{ name: 'דף הבית', href: '/' }, { name: product.name, href: product.canonicalPath }]} />
           <header className="mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-neutral-100 mb-4">{product.name}</h1>
-            <p className="text-neutral-400 leading-relaxed max-w-3xl whitespace-pre-wrap">{product.description}</p>
+            <h1 className="mb-4 text-3xl font-bold text-brand-ink md:text-4xl">{product.name}</h1>
+            <p className="max-w-3xl whitespace-pre-wrap leading-relaxed text-brand-ink-muted">{product.description}</p>
           </header>
           {galleryUrls.length > 0 ? (
             <section className="mb-10" aria-label="גלריה">
-              <h2 className="mb-4 text-lg font-semibold text-amber-500/90">גלריה</h2>
+              <h2 className="mb-4 text-lg font-semibold text-brand-leaf">גלריה</h2>
               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                 {galleryUrls.map((url) => (
                   <a
@@ -161,7 +161,7 @@ export default async function ProductPage({ params }: PageProps) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative h-32 w-44 shrink-0 overflow-hidden rounded-xl border border-neutral-800"
+                    className="relative h-32 w-44 shrink-0 overflow-hidden rounded-xl border border-brand-border"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -174,7 +174,7 @@ export default async function ProductPage({ params }: PageProps) {
               </div>
             </section>
           ) : null}
-          <h2 className="text-lg font-semibold text-amber-500/90 mb-6">בחרו נפח וריכוז</h2>
+          <h2 className="mb-6 text-lg font-semibold text-brand-leaf">בחרו נפח וריכוז</h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {product.variants.map((v) => (
               <ProductCard

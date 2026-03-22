@@ -7,17 +7,24 @@ export default function Breadcrumbs({ items }: Props) {
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="פירורי לחם" className="mb-8 text-sm text-neutral-400">
+    <nav aria-label="פירורי לחם" className="mb-8 text-sm text-brand-ink-muted">
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
             <li key={`${item.href}-${i}`} className="flex items-center gap-2">
-              {i > 0 && <span className="text-neutral-600" aria-hidden>/</span>}
+              {i > 0 && (
+                <span className="text-brand-border" aria-hidden>
+                  /
+                </span>
+              )}
               {isLast ? (
-                <span className="font-medium text-neutral-200">{item.name}</span>
+                <span className="font-medium text-brand-ink">{item.name}</span>
               ) : (
-                <Link href={item.href} className="hover:text-amber-500 transition-colors">
+                <Link
+                  href={item.href}
+                  className="transition-colors hover:text-brand-leaf"
+                >
                   {item.name}
                 </Link>
               )}

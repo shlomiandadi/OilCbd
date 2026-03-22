@@ -1,7 +1,13 @@
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import { saveNavLink, deleteNavLinkForm } from '@/lib/admin/actions/nav';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminBtnSecondary,
+} from '@/components/admin/AdminField';
 
 export default async function AdminNavPage() {
   await requireAdmin();
@@ -22,20 +28,25 @@ export default async function AdminNavPage() {
 
   return (
     <div className="space-y-10">
-      <h1 className="text-2xl font-semibold">תפריט והפוטר</h1>
-      <p className="text-sm text-neutral-500">
-        קישורים עם הורה מוצגים כתת־תפריט באתר. מחקה ימחק גם ילדים (cascade).
-      </p>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
+          ניווט
+        </p>
+        <h1 className="mt-1 text-3xl font-bold text-brand-ink">תפריט והפוטר</h1>
+        <p className="mt-2 max-w-2xl text-sm text-brand-ink-muted">
+          קישורים עם הורה מוצגים כתת־תפריט באתר. מחיקת הורה מוחקת גם ילדים (cascade).
+        </p>
+      </div>
 
       {sections.map((section) => (
-        <section key={section} className="space-y-4">
-          <h2 className="text-lg font-medium text-amber-400/90">
+        <section key={section} className="space-y-6">
+          <h2 className="border-b border-brand-border pb-2 text-lg font-bold text-brand-ink">
             {section === 'header' ? 'כותרת (הדר)' : 'פוטר'}
           </h2>
 
-          <div className="rounded-xl border border-dashed border-neutral-700 p-4">
-            <h3 className="mb-3 text-sm text-neutral-400">קישור חדש</h3>
-            <form action={saveNavLink} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="admin-card border-2 border-dashed border-brand-border/70 !bg-brand-cream/30">
+            <h3 className="mb-4 text-sm font-semibold text-brand-leaf">קישור חדש</h3>
+            <form action={saveNavLink} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <input type="hidden" name="section" value={section} />
               <AdminField label="תווית">
                 <input className={adminInputClass} name="label" required />
@@ -62,27 +73,21 @@ export default async function AdminNavPage() {
                 </select>
               </AdminField>
               <div className="sm:col-span-2 lg:col-span-4">
-                <button
-                  type="submit"
-                  className="rounded-lg bg-amber-600 px-4 py-2 text-sm text-neutral-950 hover:bg-amber-500"
-                >
-                  הוסף
+                <button type="submit" className={adminBtnPrimary}>
+                  הוסף קישור
                 </button>
               </div>
             </form>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid gap-4 lg:grid-cols-1">
             {links
               .filter((l) => l.section === section)
               .map((row) => (
-                <div
-                  key={row.id}
-                  className="rounded-xl border border-neutral-800 bg-neutral-900/30 p-4"
-                >
+                <div key={row.id} className="admin-card !p-5">
                   <form
                     action={saveNavLink}
-                    className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
+                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:items-end"
                   >
                     <input type="hidden" name="id" value={row.id} />
                     <input type="hidden" name="section" value={row.section} />
@@ -124,21 +129,15 @@ export default async function AdminNavPage() {
                         ))}
                       </select>
                     </AdminField>
-                    <div className="flex items-end gap-2">
-                      <button
-                        type="submit"
-                        className="rounded-lg bg-neutral-700 px-4 py-2 text-sm hover:bg-neutral-600"
-                      >
+                    <div className="flex flex-wrap gap-2 lg:justify-end">
+                      <button type="submit" className={adminBtnSecondary}>
                         שמור
                       </button>
                     </div>
                   </form>
-                  <form action={deleteNavLinkForm} className="mt-2">
+                  <form action={deleteNavLinkForm} className="mt-4 border-t border-brand-border/60 pt-4">
                     <input type="hidden" name="id" value={row.id} />
-                    <button
-                      type="submit"
-                      className="text-xs text-red-400 hover:text-red-300"
-                    >
+                    <button type="submit" className={adminBtnDanger}>
                       מחק קישור
                     </button>
                   </form>

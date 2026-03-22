@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { requireAdminRole } from '@/lib/admin/guard';
 import { AdminUserForm } from '@/components/admin/AdminUserForm';
 
@@ -10,7 +10,7 @@ export default async function NewAdminUserPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/users"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

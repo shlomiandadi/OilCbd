@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { requireAdmin } from '@/lib/admin/guard';
 import { ProductForm } from '@/components/admin/ProductForm';
 
@@ -10,7 +10,7 @@ export default async function NewProductPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/products"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

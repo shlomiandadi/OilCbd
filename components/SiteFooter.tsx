@@ -41,19 +41,19 @@ export default async function SiteFooter() {
     t['footer.disclaimer'] ?? FALLBACK_FOOTER_DISCLAIMER;
 
   return (
-    <footer className="mt-auto border-t border-neutral-800 bg-neutral-950">
+    <footer className="mt-auto border-t border-emerald-950/15 bg-gradient-to-b from-emerald-950 to-[#0f2415] text-emerald-50">
       <div className="container mx-auto px-6 py-12">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
           <div>
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-amber-500">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-300/90">
               {linksTitle}
             </h2>
-            <nav className="flex flex-col gap-2 text-sm text-neutral-400" aria-label="פוטר">
+            <nav className="flex flex-col gap-2 text-sm text-emerald-100/80" aria-label="פוטר">
               {footerLinks.map((l) => (
                 <Link
                   key={l.id}
                   href={l.href}
-                  className="transition-colors hover:text-amber-500"
+                  className="transition-colors hover:text-white"
                 >
                   {l.label}
                 </Link>
@@ -61,13 +61,13 @@ export default async function SiteFooter() {
             </nav>
           </div>
           <div className="md:col-span-2 lg:col-span-2">
-            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-amber-500">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-300/90">
               {statementTitle}
             </h2>
-            <p className="text-sm leading-relaxed text-neutral-500">{disclaimerText}</p>
+            <p className="text-sm leading-relaxed text-emerald-100/70">{disclaimerText}</p>
           </div>
         </div>
-        <p className="mt-10 border-t border-neutral-800 pt-8 text-center text-xs text-neutral-600">
+        <p className="mt-10 border-t border-emerald-800/40 pt-8 text-center text-xs text-emerald-200/50">
           {copyrightLine}
         </p>
       </div>

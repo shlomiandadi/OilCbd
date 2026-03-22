@@ -1,6 +1,10 @@
 import type { AdminUser } from '@prisma/client';
 import { saveAdminUser } from '@/lib/admin/actions/users';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnPrimary,
+} from '@/components/admin/AdminField';
 
 export function AdminUserForm({ user }: { user: AdminUser | null }) {
   const u = user;
@@ -46,10 +50,7 @@ export function AdminUserForm({ user }: { user: AdminUser | null }) {
           <option value="EDITOR">EDITOR — תוכן בלבד</option>
         </select>
       </AdminField>
-      <button
-        type="submit"
-        className="rounded-lg bg-amber-600 px-6 py-2.5 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-      >
+      <button type="submit" className={adminBtnPrimary}>
         שמור
       </button>
     </form>

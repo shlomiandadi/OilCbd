@@ -1,7 +1,13 @@
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import { saveSiteSetting, deleteSiteSettingForm } from '@/lib/admin/actions/settings';
-import { AdminField, adminInputClass } from '@/components/admin/AdminField';
+import {
+  AdminField,
+  adminInputClass,
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminBtnSecondary,
+} from '@/components/admin/AdminField';
 
 export default async function AdminSettingsPage() {
   await requireAdmin();
@@ -10,15 +16,20 @@ export default async function AdminSettingsPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">טקסטים גלובליים</h1>
-      <p className="text-sm text-neutral-500">
-        מפתחות כמו דף הבית, הדר ופוטר. ערכי JSON (כרטיסי אמון) יש לערוך כ־JSON תקין.
-      </p>
+    <div className="space-y-10">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
+          אתר
+        </p>
+        <h1 className="mt-1 text-3xl font-bold text-brand-ink">טקסטים גלובליים</h1>
+        <p className="mt-2 max-w-2xl text-sm text-brand-ink-muted">
+          מפתחות דף הבית, הדר ופוטר. ערכי JSON (כרטיסי אמון) — JSON תקין בלבד.
+        </p>
+      </div>
 
-      <div className="rounded-xl border border-dashed border-neutral-700 p-4">
-        <h2 className="mb-3 text-sm font-medium text-amber-400/90">מפתח חדש</h2>
-        <form action={saveSiteSetting} className="space-y-3">
+      <div className="admin-card border-2 border-dashed border-brand-border/70 !bg-brand-cream/30">
+        <h2 className="mb-4 text-sm font-semibold text-brand-leaf">מפתח חדש</h2>
+        <form action={saveSiteSetting} className="max-w-2xl space-y-4">
           <AdminField label="מפתח">
             <input className={adminInputClass} name="key" required />
           </AdminField>
@@ -29,24 +40,18 @@ export default async function AdminSettingsPage() {
               required
             />
           </AdminField>
-          <button
-            type="submit"
-            className="rounded-lg bg-amber-600 px-4 py-2 text-sm text-neutral-950 hover:bg-amber-500"
-          >
-            שמור
+          <button type="submit" className={adminBtnPrimary}>
+            שמור מפתח
           </button>
         </form>
       </div>
 
       <div className="space-y-4">
         {rows.map((r) => (
-          <div
-            key={r.key}
-            className="rounded-xl border border-neutral-800 bg-neutral-900/30 p-4"
-          >
-            <form action={saveSiteSetting} className="space-y-3">
+          <div key={r.key} className="admin-card !p-5">
+            <form action={saveSiteSetting} className="space-y-4">
               <input type="hidden" name="key" value={r.key} />
-              <p className="font-mono text-xs text-amber-500/90">{r.key}</p>
+              <p className="font-mono text-xs font-semibold text-brand-leaf">{r.key}</p>
               <AdminField label="ערך">
                 <textarea
                   className={`${adminInputClass} min-h-[120px] font-mono text-xs`}
@@ -55,22 +60,16 @@ export default async function AdminSettingsPage() {
                   defaultValue={r.value}
                 />
               </AdminField>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="submit"
-                  className="rounded-lg bg-neutral-700 px-4 py-2 text-sm hover:bg-neutral-600"
-                >
+              <div className="flex flex-wrap gap-3">
+                <button type="submit" className={adminBtnSecondary}>
                   עדכן
                 </button>
               </div>
             </form>
-            <form action={deleteSiteSettingForm} className="mt-2">
+            <form action={deleteSiteSettingForm} className="mt-4 border-t border-brand-border/60 pt-4">
               <input type="hidden" name="key" value={r.key} />
-              <button
-                type="submit"
-                className="text-xs text-red-400 hover:text-red-300"
-              >
-                מחק מפתח (יזהר — עלול לשבור את האתר)
+              <button type="submit" className={adminBtnDanger}>
+                מחק מפתח (זהירות)
               </button>
             </form>
           </div>

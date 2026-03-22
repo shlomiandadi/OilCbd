@@ -13,17 +13,25 @@ export default async function AdminLoginPage({ searchParams }: Props) {
     : '/admin';
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-950 p-6">
-      <div className="w-full max-w-md space-y-6 rounded-2xl border border-neutral-800 bg-neutral-900/50 p-8">
-        <h1 className="text-center text-xl font-semibold text-amber-400">
-          כניסה לניהול
-        </h1>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-bg via-white to-[#dce8de] p-6">
+      <div
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(45,106,62,0.12),transparent)]"
+        aria-hidden
+      />
+      <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-brand-border/60 bg-white/90 p-8 shadow-admin-card backdrop-blur-sm">
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-leaf">
+            OilCbd
+          </p>
+          <h1 className="mt-2 text-2xl font-bold text-brand-ink">כניסה לניהול</h1>
+          <p className="mt-1 text-sm text-brand-ink-muted">ממשק ניהול תוכן ומוצרים</p>
+        </div>
         {err ? (
-          <p className="rounded-lg bg-red-950/50 px-3 py-2 text-center text-sm text-red-300">
+          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-800">
             {err}
           </p>
         ) : null}
-        <form action={adminLogin} className="space-y-4">
+        <form action={adminLogin} className="space-y-5">
           <input type="hidden" name="next" value={next} />
           <AdminField label="אימייל">
             <input
@@ -45,7 +53,7 @@ export default async function AdminLoginPage({ searchParams }: Props) {
           </AdminField>
           <button
             type="submit"
-            className="w-full rounded-lg bg-amber-600 py-2.5 text-sm font-medium text-neutral-950 hover:bg-amber-500"
+            className="w-full rounded-xl bg-gradient-to-l from-brand-leaf to-brand-leaf-dark py-3 text-sm font-bold text-white shadow-lg shadow-brand-leaf/25 transition hover:brightness-105"
           >
             התחבר
           </button>

@@ -2,6 +2,11 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin/guard';
 import { deleteAdminUserForm } from '@/lib/admin/actions/users';
+import {
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminBtnSecondary,
+} from '@/components/admin/AdminField';
 
 export default async function AdminUsersPage() {
   const me = await requireAdmin();
@@ -11,47 +16,64 @@ export default async function AdminUsersPage() {
 
   if (me.role !== 'ADMIN') {
     return (
-      <p className="text-neutral-400">
-        רק משתמשים בתפקיד ADMIN יכולים לנהל חשבונות ניהול.
-      </p>
+      <div className="admin-card max-w-lg">
+        <p className="text-brand-ink-muted">
+          רק משתמשים בתפקיד ADMIN יכולים לנהל חשבונות ניהול.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">משתמשי ניהול</h1>
-        <Link
-          href="/admin/users/new"
-          className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-amber-500"
-        >
-          משתמש חדש
+    <div className="space-y-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
+            אבטחה
+          </p>
+          <h1 className="mt-1 text-3xl font-bold text-brand-ink">משתמשי ניהול</h1>
+          <p className="mt-2 max-w-xl text-sm text-brand-ink-muted">
+            הרשאות ADMIN מלאות או EDITOR לתוכן בלבד.
+          </p>
+        </div>
+        <Link href="/admin/users/new" className={adminBtnPrimary}>
+          + משתמש חדש
         </Link>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-neutral-800">
+
+      <div className="admin-table-wrap">
         <table className="w-full min-w-[480px] text-sm">
-          <thead className="border-b border-neutral-800 bg-neutral-900/60">
+          <thead className="border-b border-brand-border bg-brand-cream/80">
             <tr>
-              <th className="p-3 text-start text-neutral-400">אימייל</th>
-              <th className="p-3 text-start text-neutral-400">שם</th>
-              <th className="p-3 text-start text-neutral-400">תפקיד</th>
-              <th className="p-3 text-end text-neutral-400">פעולות</th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                אימייל
+              </th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                שם
+              </th>
+              <th className="p-4 text-start text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                תפקיד
+              </th>
+              <th className="p-4 text-end text-xs font-bold uppercase tracking-wide text-brand-ink-muted">
+                פעולות
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-brand-border/50 bg-white">
             {users.map((u) => (
-              <tr
-                key={u.id}
-                className="border-b border-neutral-800/80 hover:bg-neutral-900/30"
-              >
-                <td className="p-3">{u.email}</td>
-                <td className="p-3 text-neutral-500">{u.name ?? '—'}</td>
-                <td className="p-3">{u.role}</td>
-                <td className="p-3 text-end">
+              <tr key={u.id} className="transition hover:bg-brand-cream/40">
+                <td className="p-4 font-medium text-brand-ink">{u.email}</td>
+                <td className="p-4 text-brand-ink-muted">{u.name ?? '—'}</td>
+                <td className="p-4">
+                  <span className="inline-flex rounded-full bg-brand-cream px-2.5 py-0.5 text-xs font-semibold text-brand-leaf-dark">
+                    {u.role}
+                  </span>
+                </td>
+                <td className="p-4 text-end">
                   <div className="flex flex-wrap justify-end gap-2">
                     <Link
                       href={`/admin/users/${u.id}`}
-                      className="rounded border border-neutral-600 px-2 py-1 text-xs hover:bg-neutral-800"
+                      className={adminBtnSecondary + ' !px-3 !py-1.5 !text-xs'}
                     >
                       עריכה
                     </Link>
@@ -60,7 +82,7 @@ export default async function AdminUsersPage() {
                       <button
                         type="submit"
                         disabled={u.id === me.id}
-                        className="rounded border border-red-900/60 px-2 py-1 text-xs text-red-300 hover:bg-red-950/40 disabled:opacity-30"
+                        className={adminBtnDanger + ' disabled:opacity-40'}
                       >
                         מחק
                       </button>

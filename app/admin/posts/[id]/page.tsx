@@ -22,7 +22,7 @@ export default async function EditBlogPostPage({ params }: Props) {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/posts"
-          className="text-sm text-neutral-400 hover:text-amber-400"
+          className="text-sm font-medium text-brand-leaf hover:text-brand-leaf-dark"
         >
           ← חזרה
         </Link>

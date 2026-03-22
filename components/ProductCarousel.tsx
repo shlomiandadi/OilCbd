@@ -112,13 +112,13 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-neutral-100 sm:text-3xl" id="carousel-heading">
+          <h2 className="text-2xl font-bold text-brand-ink sm:text-3xl" id="carousel-heading">
             {title}
           </h2>
           {subtitle ? (
-            <p className="mt-1 max-w-2xl text-neutral-400">{subtitle}</p>
+            <p className="mt-1 max-w-2xl text-brand-ink-muted">{subtitle}</p>
           ) : null}
-          {hint ? <p className="mt-2 text-sm text-neutral-500">{hint}</p> : null}
+          {hint ? <p className="mt-2 text-sm text-brand-ink-muted/80">{hint}</p> : null}
         </div>
 
         {items.length > 1 ? (
@@ -127,7 +127,7 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
               type="button"
               onClick={goPrev}
               disabled={!canPrev}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-700 bg-neutral-900/90 text-lg text-neutral-200 shadow-lg transition hover:border-amber-500/50 hover:text-amber-400 disabled:pointer-events-none disabled:opacity-30"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-border bg-white text-lg text-brand-ink shadow-md transition hover:border-brand-leaf/50 hover:text-brand-leaf disabled:pointer-events-none disabled:opacity-30"
               aria-label="שקופית קודמת"
             >
               ‹
@@ -136,7 +136,7 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
               type="button"
               onClick={goNext}
               disabled={!canNext}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-700 bg-neutral-900/90 text-lg text-neutral-200 shadow-lg transition hover:border-amber-500/50 hover:text-amber-400 disabled:pointer-events-none disabled:opacity-30"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-border bg-white text-lg text-brand-ink shadow-md transition hover:border-brand-leaf/50 hover:text-brand-leaf disabled:pointer-events-none disabled:opacity-30"
               aria-label="שקופית הבאה"
             >
               ›
@@ -152,7 +152,7 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
               type="button"
               onClick={goPrev}
               disabled={!canPrev}
-              className="absolute right-0 top-1/2 z-10 hidden h-12 w-10 -translate-y-1/2 items-center justify-center rounded-l-lg border border-neutral-700/80 bg-neutral-950/85 text-2xl text-amber-400/95 shadow-md backdrop-blur-sm transition hover:bg-neutral-900 disabled:cursor-not-allowed disabled:opacity-25 md:flex"
+              className="absolute right-0 top-1/2 z-10 hidden h-12 w-10 -translate-y-1/2 items-center justify-center rounded-l-lg border border-brand-border bg-white/95 text-2xl text-brand-leaf shadow-md backdrop-blur-sm transition hover:bg-brand-cream disabled:cursor-not-allowed disabled:opacity-25 md:flex"
               aria-label="שקופית קודמת"
             >
               ›
@@ -161,7 +161,7 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
               type="button"
               onClick={goNext}
               disabled={!canNext}
-              className="absolute left-0 top-1/2 z-10 hidden h-12 w-10 -translate-y-1/2 items-center justify-center rounded-r-lg border border-neutral-700/80 bg-neutral-950/85 text-2xl text-amber-400/95 shadow-md backdrop-blur-sm transition hover:bg-neutral-900 disabled:cursor-not-allowed disabled:opacity-25 md:flex"
+              className="absolute left-0 top-1/2 z-10 hidden h-12 w-10 -translate-y-1/2 items-center justify-center rounded-r-lg border border-brand-border bg-white/95 text-2xl text-brand-leaf shadow-md backdrop-blur-sm transition hover:bg-brand-cream disabled:cursor-not-allowed disabled:opacity-25 md:flex"
               aria-label="שקופית הבאה"
             >
               ‹
@@ -221,8 +221,8 @@ export default function ProductCarousel({ title, subtitle, hint, items }: Props)
               onClick={() => scrollToIndex(i)}
               className={`h-2.5 rounded-full transition-all duration-300 ${
                 i === active
-                  ? 'w-8 bg-amber-500'
-                  : 'w-2.5 bg-neutral-600 hover:bg-neutral-500'
+                  ? 'w-8 bg-brand-leaf'
+                  : 'w-2.5 bg-brand-border hover:bg-brand-sage/60'
               }`}
             />
           ))}

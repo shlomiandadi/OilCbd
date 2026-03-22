@@ -5,66 +5,145 @@ import { useCartStore } from '@/store/cartStore';
 import { createIsracardPayment } from '@/actions/checkout';
 import { saveManualOrder } from '@/actions/manualCheckout';
 
+const inputClass =
+  'w-full rounded-xl border border-brand-border bg-white p-3 text-brand-ink placeholder:text-brand-ink-muted/50 outline-none focus:border-brand-leaf focus:ring-2 focus:ring-brand-leaf/15';
+
 export default function CheckoutPage() {
   const { totalPrice } = useCartStore();
   const [paymentMethod, setPaymentMethod] = useState<'credit' | 'bit' | 'paybox'>('credit');
 
+  const tabBase =
+    'flex-1 rounded-xl border py-3 text-sm font-semibold transition-all';
+  const tabInactive = 'border-brand-border bg-white text-brand-ink-muted hover:border-brand-leaf/30';
+
   return (
-    <div className="min-h-screen bg-neutral-950 pt-20 pb-20 text-neutral-100" dir="rtl">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-10 text-center uppercase tracking-widest text-amber-500">תשלום מאובטח</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          
-          <div className="md:col-span-2 space-y-6">
-            <div className="flex gap-4">
-              <button type="button" onClick={() => setPaymentMethod('credit')} className={`flex-1 py-3 rounded-xl border transition-all ${paymentMethod === 'credit' ? 'border-amber-500 bg-amber-500/10 text-amber-500' : 'border-neutral-700 bg-neutral-900 text-neutral-300'}`}>אשראי</button>
-              <button type="button" onClick={() => setPaymentMethod('bit')} className={`flex-1 py-3 rounded-xl border transition-all ${paymentMethod === 'bit' ? 'border-blue-500 bg-blue-500/10 text-blue-400' : 'border-neutral-700 bg-neutral-900 text-neutral-300'}`}>Bit</button>
-              <button type="button" onClick={() => setPaymentMethod('paybox')} className={`flex-1 py-3 rounded-xl border transition-all ${paymentMethod === 'paybox' ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400' : 'border-neutral-700 bg-neutral-900 text-neutral-300'}`}>PayBox</button>
+    <div className="min-h-screen bg-brand-bg pb-20 pt-16 text-brand-ink" dir="rtl">
+      <div className="container mx-auto max-w-4xl px-6">
+        <h1 className="mb-10 text-center text-3xl font-bold uppercase tracking-widest text-brand-leaf-dark">
+          תשלום מאובטח
+        </h1>
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+          <div className="space-y-6 md:col-span-2">
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('credit')}
+                className={`${tabBase} ${
+                  paymentMethod === 'credit'
+                    ? 'border-brand-leaf bg-brand-cream text-brand-leaf-dark ring-2 ring-brand-leaf/20'
+                    : tabInactive
+                }`}
+              >
+                אשראי
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('bit')}
+                className={`${tabBase} ${
+                  paymentMethod === 'bit'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-200'
+                    : tabInactive
+                }`}
+              >
+                Bit
+              </button>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('paybox')}
+                className={`${tabBase} ${
+                  paymentMethod === 'paybox'
+                    ? 'border-cyan-500 bg-cyan-50 text-cyan-800 ring-2 ring-cyan-200'
+                    : tabInactive
+                }`}
+              >
+                PayBox
+              </button>
             </div>
 
-            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8">
+            <div className="rounded-2xl border border-brand-border bg-white p-8 shadow-brand-soft">
               {paymentMethod === 'credit' && (
                 <form action={createIsracardPayment} className="space-y-4">
                   <input type="hidden" name="amount" value={totalPrice()} />
-                  <input type="text" name="name" placeholder="שם מלא על הכרטיס" required className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
-                  <input type="email" name="email" placeholder="אימייל לקבלת חשבונית" required className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
-                  <button type="submit" className="w-full bg-amber-500 text-neutral-950 font-bold py-4 rounded-xl mt-4">המשך לתשלום באשראי</button>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="שם מלא על הכרטיס"
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="אימייל לקבלת חשבונית"
+                    required
+                    className={inputClass}
+                  />
+                  <button
+                    type="submit"
+                    className="mt-4 w-full rounded-xl bg-gradient-to-l from-brand-leaf to-brand-leaf-dark py-4 font-bold text-white shadow-md shadow-brand-leaf/20 transition hover:brightness-105"
+                  >
+                    המשך לתשלום באשראי
+                  </button>
                 </form>
               )}
 
               {(paymentMethod === 'bit' || paymentMethod === 'paybox') && (
                 <form action={saveManualOrder} className="space-y-4 text-center">
-                  <p className="text-neutral-300 mb-4">העבר סך של <span className="text-amber-500 font-bold">₪{totalPrice()}</span> ב-{paymentMethod === 'bit' ? 'ביט' : 'פייבוקס'}.</p>
-                  
-                  {/* המקום לברקוד שתעלה */}
-                  <div className="w-48 h-48 mx-auto rounded-xl border border-neutral-700 bg-neutral-950 p-2 mb-6">
-                      <div className="flex h-full w-full items-center justify-center rounded-lg border-2 border-dashed border-neutral-600 text-sm text-neutral-400">ברקוד {paymentMethod}</div>
+                  <p className="mb-4 text-brand-ink-muted">
+                    העבר סך של{' '}
+                    <span className="font-bold text-brand-leaf-dark">₪{totalPrice()}</span> ב-
+                    {paymentMethod === 'bit' ? 'ביט' : 'פייבוקס'}.
+                  </p>
+
+                  <div className="mx-auto mb-6 h-48 w-48 rounded-xl border border-brand-border bg-brand-cream/50 p-2">
+                    <div className="flex h-full w-full items-center justify-center rounded-lg border-2 border-dashed border-brand-border text-sm text-brand-ink-muted">
+                      ברקוד {paymentMethod}
+                    </div>
                   </div>
 
                   <input type="hidden" name="amount" value={totalPrice()} />
                   <input type="hidden" name="paymentMethod" value={paymentMethod} />
-                  
+
                   <div className="grid grid-cols-2 gap-4 text-right">
-                    <input type="text" name="name" placeholder="שם מלא" required className="bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
-                    <input type="text" name="phone" placeholder="טלפון" required className="bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
+                    <input type="text" name="name" placeholder="שם מלא" required className={inputClass} />
+                    <input type="text" name="phone" placeholder="טלפון" required className={inputClass} />
                   </div>
-                  <input type="text" name="address" placeholder="כתובת למשלוח" required className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-right text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
-                  <input type="email" name="email" placeholder="אימייל" required className="w-full bg-neutral-950 border border-neutral-700 rounded-lg p-3 text-right text-neutral-100 placeholder:text-neutral-500 focus:border-amber-500 outline-none" />
-                  
-                  <input type="text" name="referenceNumber" placeholder="מספר אסמכתא (לאחר ההעברה)" required className="mt-4 w-full rounded-lg border border-amber-500/50 bg-neutral-950 p-3 text-center tracking-widest text-amber-400 placeholder:text-amber-500/50 outline-none focus:border-amber-500" />
-                  <button type="submit" className="w-full bg-amber-500 text-neutral-950 font-bold py-4 rounded-xl mt-4">שלח הזמנה לאימות</button>
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="כתובת למשלוח"
+                    required
+                    className={inputClass}
+                  />
+                  <input type="email" name="email" placeholder="אימייל" required className={inputClass} />
+
+                  <input
+                    type="text"
+                    name="referenceNumber"
+                    placeholder="מספר אסמכתא (לאחר ההעברה)"
+                    required
+                    className={`${inputClass} mt-4 text-center tracking-widest`}
+                  />
+                  <button
+                    type="submit"
+                    className="mt-4 w-full rounded-xl bg-gradient-to-l from-brand-leaf to-brand-leaf-dark py-4 font-bold text-white shadow-md shadow-brand-leaf/20 transition hover:brightness-105"
+                  >
+                    שלח הזמנה לאימות
+                  </button>
                 </form>
               )}
             </div>
           </div>
 
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 h-fit">
-            <h3 className="mb-4 text-lg font-bold text-neutral-100">סיכום</h3>
-            <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-              <span className="text-neutral-400">משלוח</span><span className="text-green-500">חינם</span>
+          <div className="h-fit rounded-2xl border border-brand-border bg-white p-6 shadow-brand-soft">
+            <h3 className="mb-4 text-lg font-bold text-brand-ink">סיכום</h3>
+            <div className="flex items-center justify-between border-b border-brand-border py-3">
+              <span className="text-brand-ink-muted">משלוח</span>
+              <span className="font-semibold text-brand-leaf">חינם</span>
             </div>
-            <div className="flex justify-between items-center pt-4">
-              <span className="text-xl font-bold text-neutral-100">סך הכל</span><span className="text-2xl font-bold text-amber-500">₪{totalPrice()}</span>
+            <div className="flex items-center justify-between pt-4">
+              <span className="text-xl font-bold text-brand-ink">סך הכל</span>
+              <span className="text-2xl font-bold text-brand-leaf-dark">₪{totalPrice()}</span>
             </div>
           </div>
         </div>

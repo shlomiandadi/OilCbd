@@ -33,20 +33,42 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-semibold text-neutral-100">סקירה</h1>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 transition-colors hover:border-amber-700/50"
-          >
-            <div className="text-3xl font-bold text-amber-400">{c.count}</div>
-            <div className="mt-1 text-sm text-neutral-300">{c.label}</div>
-          </Link>
-        ))}
-      </div>
+    <div className="space-y-10">
+      <header className="admin-card !p-8">
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand-leaf">
+          סקירה כללית
+        </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-ink">
+          ברוכים השבים
+        </h1>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-brand-ink-muted">
+          ניהול תוכן, מוצרים, תפריט והגדרות האתר — הכל במקום אחד. בחרו אזור מהכרטיסים
+          למטה.
+        </p>
+      </header>
+
+      <section>
+        <h2 className="mb-4 text-sm font-semibold text-brand-ink-muted">פעילות מהירה</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((c) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              className="group admin-card flex flex-col !p-6 transition hover:border-brand-leaf/35 hover:shadow-lg"
+            >
+              <div className="text-4xl font-bold tabular-nums text-brand-leaf">
+                {c.count}
+              </div>
+              <div className="mt-2 text-sm font-semibold text-brand-ink group-hover:text-brand-leaf-dark">
+                {c.label}
+              </div>
+              <span className="mt-3 text-xs text-brand-ink-muted opacity-0 transition group-hover:opacity-100">
+                פתח ←
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
