@@ -39,6 +39,14 @@ npm run dev
 
 תיעוד Netlify ל־Next.js: [Frameworks — Next.js](https://docs.netlify.com/frameworks/next-js/overview/).
 
+### המוצרים לא מופיעים בלייב (Netlify)
+
+1. **Site configuration → Environment variables** — ודאו ש־`DATABASE_URL` קיים עבור **Production** (אותו ערך כמו ב־`.env` המקומי). אל תכללו מרכאות בשדה הערך.
+2. הוסיפו **`NEXT_PUBLIC_SITE_URL`** עם כתובת האתר המלאה (למשל `https://oil-cbd.netlify.app`).
+3. **Deploys → Trigger deploy → Clear cache and deploy site**.
+4. מהטרמינל המקומי (עם `DATABASE_URL` זהה ב־`.env`): `npx prisma migrate deploy` ואז `npx prisma db seed`.
+5. אם עדיין נכשל: **Deploy log** ב-Netlify — חפשו `[HomePage]` או `Prisma`.
+
 ## חיבור לגיטהאב
 
 מתוך תיקיית הפרויקט:

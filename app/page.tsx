@@ -4,6 +4,8 @@ import ProductCard from '@/components/ProductCard';
 import DeliveryInfo from '@/components/DeliveryInfo';
 
 export const dynamic = 'force-dynamic';
+/** Prisma דורש Node.js (לא Edge) — חשוב ב-Netlify */
+export const runtime = 'nodejs';
 
 type ProductWithVariants = Prisma.ProductGetPayload<{
   include: { variants: true };
@@ -56,11 +58,19 @@ export default async function HomePage() {
         {cards.length === 0 ? (
           <div className="mx-auto max-w-xl text-center text-neutral-500">
             <p className="mb-3">
-              אין מוצרים להצגה. אם זה סביבת production — הוסיפו את{' '}
+              אין מוצרים להצגה. ב־Netlify:{' '}
+              <strong className="text-neutral-300">Site configuration → Environment variables</strong>
+              — הוסיפו{' '}
               <code className="rounded bg-neutral-900 px-2 py-0.5 text-amber-500/90">
                 DATABASE_URL
               </code>{' '}
-              בהגדרות האירוח (Vercel וכו׳), הריצו{' '}
+              (אותה מחרוזת כמו ב־.env המקומי, בלי מרכאות) וגם{' '}
+              <code className="rounded bg-neutral-900 px-2 py-0.5 text-amber-500/90">
+                NEXT_PUBLIC_SITE_URL
+              </code>{' '}
+              עם כתובת האתר (למשל https://oil-cbd.netlify.app). שמרו, אחר כך{' '}
+              <strong className="text-neutral-300">Deploys → Trigger deploy → Clear cache and deploy site</strong>
+              . מהמחשב, מול אותו DB, הריצו פעם אחת:{' '}
               <code className="rounded bg-neutral-900 px-2 py-0.5 text-amber-500/90">
                 npx prisma migrate deploy
               </code>{' '}
@@ -77,7 +87,7 @@ export default async function HomePage() {
               >
                 {process.env.NODE_ENV === 'development'
                   ? loadError
-                  : 'שגיאת חיבור למסד. בדקו בלוגי השרת (חפשו [HomePage]) וש־DATABASE_URL מוגדר אצל ספק האירוח.'}
+                  : 'שגיאת חיבור למסד (Prisma). ב־Netlify ודאו ש־DATABASE_URL מוגדר למצב Production, ללא מרכאות סביב הערך. בלוגי Deploy חפשו [HomePage].'}
               </p>
             ) : products.length > 0 ? (
               <p className="text-sm text-neutral-600">

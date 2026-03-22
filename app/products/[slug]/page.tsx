@@ -7,6 +7,8 @@ import { parseBreadcrumbJson } from '@/lib/seo';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ProductCard from '@/components/ProductCard';
 
+export const runtime = 'nodejs';
+
 type PageProps = { params: Promise<{ slug: string }> };
 
 async function getProduct(slug: string) {
