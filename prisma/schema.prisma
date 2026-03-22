@@ -84,3 +84,85 @@ model OrderItem {
   @@index([orderId])
   @@index([productVariantId])
 }
+
+/// קטגוריות למדריכים ובלוג
+model ContentCategory {
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  name           String
+  description    String?       @db.Text
+  seoTitle       String?
+  seoDescription String?       @db.Text
+  sortOrder      Int           @default(0)
+  pages          ContentPage[]
+  posts          BlogPost[]
+
+  @@index([slug])
+}
+
+/// עמודי תוכן סמכותיים (מילות מפתח / זנב ארוך) — נמשכים מהמסד
+model ContentPage {
+  id                String           @id @default(cuid())
+  slug              String           @unique
+  categoryId        String?
+  category          ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  title             String
+  excerpt           String?          @db.Text
+  bodyMarkdown      String           @db.Text
+  seoTitle          String
+  seoDescription    String           @db.Text
+  seoKeywords       String?
+  canonicalPath     String
+  ogImage           String?
+  breadcrumbJson    Json
+  /// ביטויי זנב ארוך לטמיעה (מערך מחרוזות)
+  targetPhrasesJson Json?
+  isPublished       Boolean          @default(true)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+/// מאמרי בלוג
+model BlogPost {
+  id             String           @id @default(cuid())
+  slug           String           @unique
+  categoryId     String?
+  category       ContentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  title          String
+  excerpt        String?          @db.Text
+  bodyMarkdown   String           @db.Text
+  coverImage     String?
+  seoTitle       String
+  seoDescription String           @db.Text
+  seoKeywords    String?
+  canonicalPath  String
+  ogImage        String?
+  breadcrumbJson Json
+  isPublished    Boolean          @default(true)
+  publishedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+}
+
+/// קישורי הדר / פוטר (SEO — טקסט עוגן ברור)
+model SiteNavLink {
+  id        String @id @default(cuid())
+  label     String
+  href      String
+  section   String
+  sortOrder Int    @default(0)
+
+  @@index([section])
+}
+
+/// טקסטים גלובליים (פוטר משפטי וכו׳)
+model SiteSetting {
+  key   String @id
+  value String @db.Text
+}

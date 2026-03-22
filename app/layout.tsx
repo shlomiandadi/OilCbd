@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
-import Header from '@/components/Header';
+import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import CartDrawer from '@/components/CartDrawer';
 import { getSiteUrl } from '@/lib/site';
+
+/** הדר/פוטר נטענים ממסד — לא לפרה-רנדר סטטי בלי DB */
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -28,9 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="he" dir="rtl">
-      <body className="bg-neutral-950 text-neutral-50">
-        <Header />
-        {children}
+      <body className="flex min-h-screen flex-col bg-neutral-950 text-neutral-50">
+        <SiteHeader />
+        <div className="flex-1">{children}</div>
+        <SiteFooter />
         <CartDrawer />
       </body>
     </html>

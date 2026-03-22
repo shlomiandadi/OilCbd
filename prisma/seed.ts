@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { seedCms } from './seed-cms';
 
 const prisma = new PrismaClient();
 
@@ -426,8 +427,15 @@ const catalog: Array<{
 async function main() {
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.blogPost.deleteMany();
+  await prisma.contentPage.deleteMany();
+  await prisma.contentCategory.deleteMany();
+  await prisma.siteNavLink.deleteMany();
+  await prisma.siteSetting.deleteMany();
   await prisma.productVariant.deleteMany();
   await prisma.product.deleteMany();
+
+  await seedCms(prisma);
 
   for (const item of catalog) {
     await prisma.product.create({
