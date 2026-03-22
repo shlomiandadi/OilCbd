@@ -29,6 +29,8 @@ model Product {
   ogImage          String?
   /// פירורי לחם: [{ "name": "...", "href": "/..." }]
   breadcrumbJson   Json
+  /// גלריית URL-ים לתמונות (מערך מחרוזות) — בנוסף לתמונות הוריאציות
+  galleryJson      Json?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   variants         ProductVariant[]
@@ -85,19 +87,23 @@ model OrderItem {
   @@index([productVariantId])
 }
 
-/// קטגוריות למדריכים ובלוג
+/// קטגוריות למדריכים ובלוג (תת־קטגוריה: parentId)
 model ContentCategory {
-  id             String        @id @default(cuid())
-  slug           String        @unique
+  id             String            @id @default(cuid())
+  slug           String            @unique
   name           String
-  description    String?       @db.Text
+  description    String?           @db.Text
   seoTitle       String?
-  seoDescription String?       @db.Text
-  sortOrder      Int           @default(0)
+  seoDescription String?           @db.Text
+  sortOrder      Int               @default(0)
+  parentId       String?
+  parent         ContentCategory?  @relation("ContentCategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children       ContentCategory[] @relation("ContentCategoryTree")
   pages          ContentPage[]
   posts          BlogPost[]
 
   @@index([slug])
+  @@index([parentId])
   @@map("content_category")
 }
 
@@ -179,4 +185,18 @@ model SiteSetting {
   value String @db.Text
 
   @@map("site_setting")
+}
+
+/// משתמשי דשבורד ניהול
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  /// ADMIN — כולל ניהול משתמשים; EDITOR — תוכן בלבד
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_user")
 }

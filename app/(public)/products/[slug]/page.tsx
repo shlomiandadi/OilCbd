@@ -67,12 +67,24 @@ function productJsonLd(
   const low = prices.length ? Math.min(...prices) : 0;
   const high = prices.length ? Math.max(...prices) : 0;
 
+  const gallery = parseGalleryUrls(product.galleryJson);
+  const primaryImage = product.ogImage ?? product.variants[0]?.image;
+  const images = [
+    ...gallery,
+    ...(primaryImage ? [primaryImage] : []),
+  ].filter((u, i, a) => a.indexOf(u) === i);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    image: product.ogImage ?? product.variants[0]?.image,
+    image:
+      images.length === 0
+        ? undefined
+        : images.length === 1
+          ? images[0]
+          : images,
     brand: { '@type': 'Brand', name: 'OilCbd' },
     offers: {
       '@type': 'AggregateOffer',
@@ -84,6 +96,13 @@ function productJsonLd(
       url: `${siteUrl}${product.canonicalPath.startsWith('/') ? product.canonicalPath : `/${product.canonicalPath}`}`,
     },
   };
+}
+
+function parseGalleryUrls(g: unknown): string[] {
+  if (!Array.isArray(g)) return [];
+  return g.filter(
+    (x): x is string => typeof x === 'string' && x.trim().length > 0
+  );
 }
 
 function breadcrumbJsonLd(
@@ -113,6 +132,7 @@ export default async function ProductPage({ params }: PageProps) {
   const crumbs = parseBreadcrumbJson(product.breadcrumbJson);
   const pLd = productJsonLd(product, siteUrl);
   const bLd = breadcrumbJsonLd(crumbs.length > 0 ? crumbs : [{ name: 'דף הבית', href: '/' }, { name: product.name, href: product.canonicalPath }], siteUrl);
+  const galleryUrls = parseGalleryUrls(product.galleryJson);
 
   return (
     <>
@@ -131,6 +151,29 @@ export default async function ProductPage({ params }: PageProps) {
             <h1 className="text-3xl md:text-4xl font-bold text-neutral-100 mb-4">{product.name}</h1>
             <p className="text-neutral-400 leading-relaxed max-w-3xl whitespace-pre-wrap">{product.description}</p>
           </header>
+          {galleryUrls.length > 0 ? (
+            <section className="mb-10" aria-label="גלריה">
+              <h2 className="mb-4 text-lg font-semibold text-amber-500/90">גלריה</h2>
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                {galleryUrls.map((url) => (
+                  <a
+                    key={url}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative h-32 w-44 shrink-0 overflow-hidden rounded-xl border border-neutral-800"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  </a>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <h2 className="text-lg font-semibold text-amber-500/90 mb-6">בחרו נפח וריכוז</h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {product.variants.map((v) => (

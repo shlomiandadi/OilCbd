@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { seedCms } from './seed-cms';
+import { seedAdminUser } from './seed-admin';
 
 const prisma = new PrismaClient();
 
@@ -469,6 +470,8 @@ async function main() {
   const count = await prisma.product.count();
   const vCount = await prisma.productVariant.count();
   console.log(`נוצרו ${count} מוצרים ו־${vCount} וריאציות.`);
+
+  await seedAdminUser(prisma);
 }
 
 main()

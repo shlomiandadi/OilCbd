@@ -5,6 +5,8 @@
 #   DATABASE_URL — Neon pooled (עם ‎-pooler‎) לאפליקציה
 #   אופציונלי למיגרציה (אחד מספיק): DIRECT_URL או DATABASE_URL_UNPOOLED (Neon מגדיר לעתים אוטומטית)
 #   NEXT_PUBLIC_SITE_URL = https://YOUR-SITE.netlify.app
+#   ADMIN_SESSION_SECRET — חובה לדשבורד /admin (מחרוזת אקראית 16+ תווים)
+#   ADMIN_SEED_EMAIL / ADMIN_SEED_PASSWORD — אופציונלי ל־db seed (משתמש ראשון)
 
 [build]
   # מיגרציה עם URL ישיר אם קיים; אחרת אותו DATABASE_URL (ראו scripts/netlify-build.sh)
