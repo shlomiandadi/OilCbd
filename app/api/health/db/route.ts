@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import {
+  isValidPostgresUrl,
+  normalizeDatabaseUrlString,
+} from '@/lib/database-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,14 +23,9 @@ function checkDatabaseUrl(): { ok: true } | { ok: false; body: Record<string, un
     };
   }
 
-  const trimmed = raw.trim();
-  const unquoted =
-    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-    (trimmed.startsWith("'") && trimmed.endsWith("'"))
-      ? trimmed.slice(1, -1).trim()
-      : trimmed;
-
-  if (!unquoted.startsWith('postgresql://') && !unquoted.startsWith('postgres://')) {
+  const normalized = normalizeDatabaseUrlString(raw);
+  if (!isValidPostgresUrl(normalized)) {
+    const head = normalized.slice(0, 24);
     return {
       ok: false,
       body: {
@@ -34,9 +33,9 @@ function checkDatabaseUrl(): { ok: true } | { ok: false; body: Record<string, un
         database: 'error',
         issue: 'DATABASE_URL_invalid_prefix',
         hintHe:
-          'הערך חייב להתחיל ב-postgresql:// או postgres:// (מחרוזת מלאה מ-Neon). נפוץ: הדבקה עם מרכאות בשדה של Netlify — מחקו את המרכאות. או שהועתק רק host בלי הפרוטוקול.',
-        leadingQuote: /^["'\s]/.test(raw),
-        lengthChars: unquoted.length,
+          'הערך חייב להכיל מחרוזת מלאה שמתחילה ב-postgresql:// (מ-Neon: Connection string). נפוץ: טקסט נוסף לפני ה-URL, או רישיות לא סטנדרטיות — עדכנו את הקוד לנרמול אוטומטי; אם עדיין נכשל, הדביקו רק את ה-URL מהדשבורד של Neon.',
+        lengthChars: normalized.length,
+        firstCharsPreview: head.replace(/[^\x20-\x7E]/g, '?'),
       },
     };
   }

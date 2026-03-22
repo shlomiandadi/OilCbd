@@ -1,22 +1,14 @@
 import { PrismaClient } from '@prisma/client';
+import { normalizeDatabaseUrlString } from '@/lib/database-url';
 
-/** Netlify/UI לפעמים שומרים מרכאות או רווחים — Prisma דורש postgresql:// בתחילת המחרוזת */
-function normalizeDatabaseUrl(): void {
+/** Netlify / העתקה — Prisma דורש postgresql:// בתחילת המחרוזת */
+function applyDatabaseUrlFromEnv(): void {
   const v = process.env.DATABASE_URL;
   if (v === undefined || v === '') return;
-  let t = v.trim();
-  if (
-    (t.startsWith('"') && t.endsWith('"')) ||
-    (t.startsWith("'") && t.endsWith("'"))
-  ) {
-    t = t.slice(1, -1).trim();
-  }
-  if (t !== v) {
-    process.env.DATABASE_URL = t;
-  }
+  process.env.DATABASE_URL = normalizeDatabaseUrlString(v);
 }
 
-normalizeDatabaseUrl();
+applyDatabaseUrlFromEnv();
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
