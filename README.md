@@ -46,6 +46,8 @@ npm run dev
 3. **Deploys → Trigger deploy → Clear cache and deploy site**.
 4. מהטרמינל המקומי (עם `DATABASE_URL` זהה ב־`.env`): `npx prisma migrate deploy` ואז `npx prisma db seed`.
 5. אם עדיין נכשל: **Deploy log** ב-Netlify — חפשו `[HomePage]` או `Prisma`.
+6. אם הגדרתם **"Different value for each deploy context"** ל־`DATABASE_URL`: ודאו שב־**Production** (לא רק Preview/Branch) הערך **זהה** למה שב־`.env` המקומי. שגוי נפוץ: רק הקשרים של preview מלאים.
+7. **בדיקה מהירה אחרי דיפלוי:** פתחו בדפדפן `https://YOUR-SITE.netlify.app/api/health/db` — אמור להחזיר `ok: true` ומספרי מוצרים. אם `ok: false`, ה־JSON מראה קוד שגיאת Prisma (למשל `P1001` = לא מתחבר).
 
 ## חיבור לגיטהאב
 

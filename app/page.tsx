@@ -80,6 +80,11 @@ export default async function HomePage() {
               </code>
               .
             </p>
+            <p className="mb-3 text-xs text-neutral-600">
+              בדיקת חיבור מהירה: פתחו{' '}
+              <code className="rounded bg-neutral-900 px-1 text-amber-500/80">/api/health/db</code>
+              — אם <code className="text-green-500/90">ok: true</code> והמספרים &gt; 0, הבעיה לא ב־DB.
+            </p>
             {loadError ? (
               <p
                 className="rounded-lg border border-red-900/50 bg-red-950/40 p-3 text-sm text-red-200/90"
