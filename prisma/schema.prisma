@@ -118,6 +118,10 @@ model ContentPage {
   breadcrumbJson    Json
   /// ביטויי זנב ארוך לטמיעה (מערך מחרוזות)
   targetPhrasesJson Json?
+  /// שאלות ותשובות ל־JSON-LD FAQPage — [{ "question": "...", "answer": "..." }]
+  faqJson           Json?
+  /// האם להציג ברשימת /learn (עמודי about/contact — false)
+  showInLearnIndex Boolean         @default(true)
   isPublished       Boolean          @default(true)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -155,13 +159,17 @@ model BlogPost {
 
 /// קישורי הדר / פוטר (SEO — טקסט עוגן ברור)
 model SiteNavLink {
-  id        String @id @default(cuid())
+  id        String        @id @default(cuid())
   label     String
   href      String
   section   String
-  sortOrder Int    @default(0)
+  sortOrder Int           @default(0)
+  parentId  String?
+  parent    SiteNavLink?  @relation("NavTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  SiteNavLink[] @relation("NavTree")
 
   @@index([section])
+  @@index([parentId])
   @@map("site_nav_link")
 }
 

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function LearnIndexPage() {
   const pages = await prisma.contentPage.findMany({
-    where: { isPublished: true },
+    where: { isPublished: true, showInLearnIndex: true },
     orderBy: [{ title: 'asc' }],
     include: { category: true },
   });

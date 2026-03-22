@@ -1,5 +1,8 @@
+import type { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
+import { ABOUT_US_MARKDOWN, CONTACT_PAGE_MARKDOWN } from './company-pages';
 import { blogPostBody, learnPageBody } from './content-bodies';
+import { HUB_SHEMEN_CANNABIS_FAQ } from './hub-shemen-cannabis';
 import { seedSiteSettings } from './seed-site-settings';
 
 type B = { name: string; href: string };
@@ -62,6 +65,14 @@ export async function seedCms(prisma: PrismaClient) {
       seoDescription: 'הקשר כללי בין מוצרי CBD לרשתות ומותגים בישראל.',
       sortOrder: 4,
     },
+    {
+      slug: 'company',
+      name: 'האתר',
+      description: 'מי אנחנו ויצירת קשר',
+      seoTitle: 'OilCbd — אודות',
+      seoDescription: 'מידע על האתר ויצירת קשר.',
+      sortOrder: 5,
+    },
   ];
 
   const catIds: Record<string, string> = {};
@@ -78,6 +89,11 @@ export async function seedCms(prisma: PrismaClient) {
     seoDescription: string;
     seoKeywords: string;
     phrases: string[];
+    canonicalPath?: string;
+    breadcrumbJson?: B[];
+    bodyMarkdown?: string;
+    faqJson?: Prisma.InputJsonValue;
+    showInLearnIndex?: boolean;
   };
 
   const pages: PageDef[] = [
@@ -85,11 +101,14 @@ export async function seedCms(prisma: PrismaClient) {
       slug: 'shemen-cannabis',
       title: 'שמן קנאביס',
       category: 'shemen-cannabis',
-      seoTitle: 'שמן קנאביס — מדריך מלא',
+      seoTitle:
+        'שמן קנאביס — מדריך מלא: כאבים, חוקי, מחיר, CBD, תופעות לוואי | OilCbd',
       seoDescription:
-        'מהו שמן קנאביס, איך נבדל ממוצרי CBD, ומה חשוב לדעת לפני רכישה.',
-      seoKeywords: 'שמן קנאביס, שמן קנאביס רפואי, cbd oil, קנאביס',
+        'מדריך שמן קנאביס ושמן CBD לישראל: שמן קנאביס לכאבים, לאידוי, חוקי, תופעות לוואי, עתיר CBD, מחיר, איך משתמשים — עם שאלות ותשובות לקידום מקומי.',
+      seoKeywords:
+        'שמן קנאביס, שמן קנאביס לכאבים, שמן קנאביס חוקי, שמן קנאביס רפואי מחיר, cbd oil, שמן cbd',
       phrases: ['שמן קנאביס', 'שמן קנאביס רפואי', 'cbd oil', 'CBD'],
+      faqJson: HUB_SHEMEN_CANNABIS_FAQ as unknown as Prisma.InputJsonValue,
     },
     {
       slug: 'cbd',
@@ -372,6 +391,40 @@ export async function seedCms(prisma: PrismaClient) {
       phrases: ['Happy Garden', 'CBD', 'שמן CBD'],
     },
     {
+      slug: 'about-us',
+      title: 'מי אנחנו',
+      category: 'company',
+      seoTitle: 'מי אנחנו | OilCbd — שמן CBD ושמן קנאביס',
+      seoDescription:
+        'היכרות עם OilCbd: שמן קנאביס, שמן CBD, שקיפות ושירות בישראל. מידע כללי בלבד.',
+      seoKeywords: 'מי אנחנו, OilCbd, שמן קנאביס, שמן cbd, cbd oil',
+      phrases: [],
+      canonicalPath: '/about',
+      breadcrumbJson: [
+        { name: 'דף הבית', href: '/' },
+        { name: 'מי אנחנו', href: '/about' },
+      ],
+      bodyMarkdown: ABOUT_US_MARKDOWN,
+      showInLearnIndex: false,
+    },
+    {
+      slug: 'contact',
+      title: 'צור קשר',
+      category: 'company',
+      seoTitle: 'צור קשר | OilCbd — שירות ומוצרי CBD',
+      seoDescription:
+        'יצירת קשר עם OilCbd: הזמנות, שאלות על שמן CBD ושמן קנאביס, ותמיכה.',
+      seoKeywords: 'צור קשר, OilCbd, שירות לקוחות, שמן קנאביס',
+      phrases: [],
+      canonicalPath: '/contact',
+      breadcrumbJson: [
+        { name: 'דף הבית', href: '/' },
+        { name: 'צור קשר', href: '/contact' },
+      ],
+      bodyMarkdown: CONTACT_PAGE_MARKDOWN,
+      showInLearnIndex: false,
+    },
+    {
       slug: 'privacy-policy',
       title: 'מדיניות פרטיות',
       category: 'legal-safety',
@@ -380,24 +433,29 @@ export async function seedCms(prisma: PrismaClient) {
         'מדיניות הפרטיות של אתר OilCbd — סוגי מידע שנאסף, שימוש, עוגיות ויצירת קשר.',
       seoKeywords: 'מדיניות פרטיות, הגנת מידע, OilCbd',
       phrases: [],
+      showInLearnIndex: false,
     },
   ];
 
   for (const p of pages) {
+    const canonicalPath = p.canonicalPath ?? `/learn/${p.slug}`;
+    const breadcrumbJson = p.breadcrumbJson ?? learnBreadcrumb(p.slug, p.title);
     await prisma.contentPage.create({
       data: {
         slug: p.slug,
         categoryId: catIds[p.category],
         title: p.title,
         excerpt: p.seoDescription.slice(0, 200),
-        bodyMarkdown: learnPageBody(p.slug, p.title, p.phrases),
+        bodyMarkdown: p.bodyMarkdown ?? learnPageBody(p.slug, p.title, p.phrases),
         seoTitle: p.seoTitle,
         seoDescription: p.seoDescription,
         seoKeywords: p.seoKeywords,
-        canonicalPath: `/learn/${p.slug}`,
+        canonicalPath,
         ogImage: null,
-        breadcrumbJson: learnBreadcrumb(p.slug, p.title),
+        breadcrumbJson,
         targetPhrasesJson: p.phrases,
+        ...(p.faqJson !== undefined ? { faqJson: p.faqJson } : {}),
+        showInLearnIndex: p.showInLearnIndex !== false,
         isPublished: true,
       },
     });
@@ -461,19 +519,75 @@ export async function seedCms(prisma: PrismaClient) {
     });
   }
 
-  const nav: { label: string; href: string; section: string; sortOrder: number }[] = [
-    { label: 'מוצרים', href: '/', section: 'header', sortOrder: 0 },
-    { label: 'מדריכים', href: '/learn', section: 'header', sortOrder: 1 },
-    { label: 'בלוג', href: '/blog', section: 'header', sortOrder: 2 },
+  const navFooter: { label: string; href: string; section: string; sortOrder: number }[] = [
     { label: 'מדריכים', href: '/learn', section: 'footer', sortOrder: 0 },
     { label: 'בלוג', href: '/blog', section: 'footer', sortOrder: 1 },
     { label: 'תשלום', href: '/checkout', section: 'footer', sortOrder: 2 },
     { label: 'מדיניות פרטיות', href: '/learn/privacy-policy', section: 'footer', sortOrder: 3 },
+    { label: 'מי אנחנו', href: '/about', section: 'footer', sortOrder: 4 },
+    { label: 'צור קשר', href: '/contact', section: 'footer', sortOrder: 5 },
   ];
 
-  for (const n of nav) {
+  for (const n of navFooter) {
     await prisma.siteNavLink.create({ data: n });
   }
+
+  await prisma.siteNavLink.create({
+    data: { label: 'מוצרים', href: '/', section: 'header', sortOrder: 0 },
+  });
+  await prisma.siteNavLink.create({
+    data: { label: 'מי אנחנו', href: '/about', section: 'header', sortOrder: 1 },
+  });
+  await prisma.siteNavLink.create({
+    data: { label: 'צור קשר', href: '/contact', section: 'header', sortOrder: 2 },
+  });
+  const nShemen = await prisma.siteNavLink.create({
+    data: {
+      label: 'שמן קנאביס',
+      href: '/learn/shemen-cannabis',
+      section: 'header',
+      sortOrder: 3,
+    },
+  });
+
+  const subShemen: { label: string; href: string; sortOrder: number }[] = [
+    { label: 'שמן קנאביס לכאבים', href: '/learn/shemen-cannabis-le-kaavim', sortOrder: 0 },
+    { label: 'שמן קנאביס לאידוי', href: '/learn/shemen-cannabis-leidoy', sortOrder: 1 },
+    { label: 'מה זה שמן קנאביס', href: '/learn/ma-ze-shemen-cannabis', sortOrder: 2 },
+    { label: 'שמן קנאביס רפואי', href: '/learn/shemen-cannabis-refui', sortOrder: 3 },
+    { label: 'שמן קנאביס יתרונות', href: '/learn/shemen-cannabis-yitronot', sortOrder: 4 },
+    { label: 'שמן קנביס תופעות לוואי', href: '/learn/shemen-cannabis-tofaot-lavay', sortOrder: 5 },
+    { label: 'שמן קנביס עתיר ב־CBD', href: '/learn/shemen-cannabis-atir-cbd', sortOrder: 6 },
+    { label: 'שמן קנאביס חוקי', href: '/learn/shemen-cannabis-huki', sortOrder: 7 },
+    { label: 'האם שמן קנאביס ממכר', href: '/learn/ha-im-shemen-cannabis-mamkir', sortOrder: 8 },
+    { label: 'האם שמן קנאביס מרדים', href: '/learn/ha-im-shemen-cannabis-meridim', sortOrder: 9 },
+    { label: 'איך משתמשים בשמן CBD', href: '/learn/eich-mishtamshim-shemen-cbd', sortOrder: 10 },
+    { label: 'למה שמן CBD עוזר', href: '/learn/lama-shemen-cbd-ozer', sortOrder: 11 },
+    { label: 'שמן קנאביס לעיסוי', href: '/learn/shemen-cannabis-le-isuy', sortOrder: 12 },
+    { label: 'שמן קנאביס רפואי מומלץ', href: '/learn/shemen-cannabis-refui-mumlats', sortOrder: 13 },
+    { label: 'שמן קנאביס אינדיקה', href: '/learn/shemen-cannabis-indica', sortOrder: 14 },
+    { label: 'שמן קנאביס סוגים', href: '/learn/shemen-cannabis-sugim', sortOrder: 15 },
+    { label: 'שמן קנאביס רפואי מחיר', href: '/learn/shemen-cannabis-refui-mekhir', sortOrder: 16 },
+  ];
+
+  for (const s of subShemen) {
+    await prisma.siteNavLink.create({
+      data: {
+        label: s.label,
+        href: s.href,
+        section: 'header',
+        sortOrder: s.sortOrder,
+        parentId: nShemen.id,
+      },
+    });
+  }
+
+  await prisma.siteNavLink.create({
+    data: { label: 'מדריכים', href: '/learn', section: 'header', sortOrder: 4 },
+  });
+  await prisma.siteNavLink.create({
+    data: { label: 'בלוג', href: '/blog', section: 'header', sortOrder: 5 },
+  });
 
   await seedSiteSettings(prisma);
 

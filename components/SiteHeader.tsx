@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma';
+import { buildNavTree } from '@/lib/nav-tree';
 import { loadSiteText, SITE_TEXT_DEFAULTS } from '@/lib/site-text';
 import SiteHeaderClient, { type HeaderLabels } from '@/components/SiteHeaderClient';
-import { FALLBACK_HEADER_NAV } from '@/lib/site-nav-fallback';
+import { FALLBACK_HEADER_TREE } from '@/lib/site-nav-fallback';
 
 export const runtime = 'nodejs';
 
@@ -17,12 +18,20 @@ const HEADER_KEYS = [
 ] as const;
 
 export default async function SiteHeader() {
-  let links = FALLBACK_HEADER_NAV;
+  let navTree = FALLBACK_HEADER_TREE;
   try {
-    links = await prisma.siteNavLink.findMany({
+    const rows = await prisma.siteNavLink.findMany({
       where: { section: 'header' },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }],
+      select: {
+        id: true,
+        label: true,
+        href: true,
+        parentId: true,
+        sortOrder: true,
+      },
     });
+    navTree = buildNavTree(rows);
   } catch (e) {
     console.error('[SiteHeader] siteNavLink.findMany failed:', e);
   }
@@ -40,5 +49,5 @@ export default async function SiteHeader() {
       t['header.mobile.catalogCta'] ?? SITE_TEXT_DEFAULTS['header.mobile.catalogCta'],
   };
 
-  return <SiteHeaderClient links={links} labels={labels} />;
+  return <SiteHeaderClient navTree={navTree} labels={labels} />;
 }

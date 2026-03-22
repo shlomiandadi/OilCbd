@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import ContentPageArticle from '@/components/ContentPageArticle';
 import { getPublishedContentPage } from '@/lib/content-page';
 import { buildContentMetadata } from '@/lib/cms-seo';
@@ -7,11 +7,8 @@ import { buildContentMetadata } from '@/lib/cms-seo';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-type Props = { params: Promise<{ slug: string }> };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const page = await getPublishedContentPage(slug);
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPublishedContentPage('about-us');
   if (!page) return { title: 'לא נמצא' };
   return buildContentMetadata({
     seoTitle: page.seoTitle,
@@ -22,13 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function LearnArticlePage({ params }: Props) {
-  const { slug } = await params;
-  const page = await getPublishedContentPage(slug);
+export default async function AboutPage() {
+  const page = await getPublishedContentPage('about-us');
   if (!page) notFound();
-  const learnPath = `/learn/${slug}`;
-  if (page.canonicalPath !== learnPath) {
-    redirect(page.canonicalPath);
-  }
   return <ContentPageArticle page={page} />;
 }

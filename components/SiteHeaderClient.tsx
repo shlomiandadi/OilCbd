@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CartControls from '@/components/CartControls';
-
-export type HeaderNavLink = { id: string; label: string; href: string };
+import type { NavNode } from '@/lib/nav-tree';
 
 export type HeaderLabels = {
   brandInitials: string;
@@ -17,10 +16,71 @@ export type HeaderLabels = {
   mobileCatalogCta: string;
 };
 
-type Props = { links: HeaderNavLink[]; labels: HeaderLabels };
+type Props = { navTree: NavNode[]; labels: HeaderLabels };
 
-export default function SiteHeaderClient({ links, labels }: Props) {
+function DesktopItem({ node }: { node: NavNode }) {
+  if (node.children.length === 0) {
+    return (
+      <Link
+        href={node.href}
+        className="rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+      >
+        {node.label}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="group relative">
+      <Link
+        href={node.href}
+        className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+      >
+        {node.label}
+        <span className="text-[10px] opacity-70" aria-hidden>
+          ▾
+        </span>
+      </Link>
+      <div
+        className="invisible absolute right-0 top-full z-50 mt-1 max-h-[min(70vh,28rem)] w-[min(100vw-2rem,20rem)] overflow-y-auto rounded-xl border border-neutral-700 bg-neutral-950/98 py-2 opacity-0 shadow-2xl backdrop-blur-md transition group-hover:visible group-hover:opacity-100"
+        role="menu"
+      >
+        <Link
+          href={node.href}
+          className="block px-4 py-2.5 text-sm font-semibold text-amber-400 hover:bg-neutral-800/80"
+          role="menuitem"
+        >
+          עמוד מוקד: {node.label}
+        </Link>
+        <div className="my-1 border-t border-neutral-800" />
+        {node.children.map((c) => (
+          <Link
+            key={c.id}
+            href={c.href}
+            className="block px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800/80 hover:text-amber-400"
+            role="menuitem"
+          >
+            {c.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function SiteHeaderClient({ navTree, labels }: Props) {
   const [open, setOpen] = useState(false);
+  const [expandedMobile, setExpandedMobile] = useState<Set<string>>(new Set());
+
+  const toggleMobile = useCallback((id: string) => {
+    setExpandedMobile((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
   const {
     brandInitials,
     brandName,
@@ -48,6 +108,45 @@ export default function SiteHeaderClient({ links, labels }: Props) {
     };
   }, [open]);
 
+  const renderMobile = (nodes: NavNode[], depth = 0) =>
+    nodes.map((node) => (
+      <div key={node.id} className={depth > 0 ? 'mr-2 border-r border-neutral-800 pr-2' : ''}>
+        {node.children.length === 0 ? (
+          <Link
+            href={node.href}
+            className="block rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
+            onClick={() => setOpen(false)}
+          >
+            {node.label}
+          </Link>
+        ) : (
+          <>
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
+              aria-expanded={expandedMobile.has(node.id)}
+              onClick={() => toggleMobile(node.id)}
+            >
+              {node.label}
+              <span className="text-xs text-neutral-500">{expandedMobile.has(node.id) ? '▴' : '▾'}</span>
+            </button>
+            {expandedMobile.has(node.id) ? (
+              <div className="mt-1 space-y-1">
+                <Link
+                  href={node.href}
+                  className="block rounded-lg px-4 py-2 text-sm font-semibold text-amber-500/90 hover:bg-neutral-800/80"
+                  onClick={() => setOpen(false)}
+                >
+                  עמוד מוקד: {node.label}
+                </Link>
+                {renderMobile(node.children, depth + 1)}
+              </div>
+            ) : null}
+          </>
+        )}
+      </div>
+    ));
+
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-amber-500/10 bg-neutral-950/85 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl">
@@ -69,21 +168,15 @@ export default function SiteHeaderClient({ links, labels }: Props) {
           </Link>
 
           <nav
-            className="hidden items-center gap-1 md:flex"
+            className="hidden flex-wrap items-center justify-center gap-0.5 md:flex lg:gap-1"
             aria-label="ניווט ראשי"
           >
-            {links.map((l) => (
-              <Link
-                key={l.id}
-                href={l.href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
-              >
-                {l.label}
-              </Link>
+            {navTree.map((node) => (
+              <DesktopItem key={node.id} node={node} />
             ))}
             <Link
               href={ctaCheckoutHref}
-              className="mr-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
+              className="mr-1 rounded-lg px-3 py-2 text-sm font-medium text-neutral-300 transition hover:bg-neutral-800/80 hover:text-amber-400"
             >
               {ctaCheckout}
             </Link>
@@ -134,7 +227,7 @@ export default function SiteHeaderClient({ links, labels }: Props) {
         onClick={() => setOpen(false)}
       />
       <div
-        className={`fixed inset-y-0 right-0 z-40 flex w-[min(100vw-3rem,20rem)] flex-col border-l border-neutral-800 bg-neutral-950 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed inset-y-0 right-0 z-40 flex w-[min(100vw-2rem,22rem)] flex-col border-l border-neutral-800 bg-neutral-950 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -144,16 +237,7 @@ export default function SiteHeaderClient({ links, labels }: Props) {
           </p>
         </div>
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-4" aria-label="ניווט מובייל">
-          {links.map((l) => (
-            <Link
-              key={l.id}
-              href={l.href}
-              className="rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {renderMobile(navTree)}
           <Link
             href={ctaCheckoutHref}
             className="rounded-xl px-4 py-3 text-base font-medium text-neutral-200 hover:bg-neutral-800"
