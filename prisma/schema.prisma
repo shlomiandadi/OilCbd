@@ -5,8 +5,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  /// Pooler (Neon *-pooler*) — לאפליקציה / serverless
+  url       = env("DATABASE_URL")
+  /// חיבור ישיר (ללא pooler) — חובה למיגרציות; ה-pooler עלול לתקוע advisory lock (P1002)
+  directUrl = env("DIRECT_URL")
 }
 
 /// מוצר לוגי (שם + תיאור); הוריאציות הנפרדות למכירה ב־ProductVariant

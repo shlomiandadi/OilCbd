@@ -2,7 +2,8 @@
 # https://docs.netlify.com/frameworks/next-js/overview/
 #
 # חובה ב-UI: Environment variables → Production
-#   DATABASE_URL       (מחרוזת Neon/Postgres, ללא מרכאות)
+#   DATABASE_URL   — Neon "Pooled" (כתובת עם ‎-pooler‎)
+#   DIRECT_URL     — Neon "Direct" (בלי pooler) — חובה ל־prisma migrate deploy; מונע P1002 advisory lock
 #   NEXT_PUBLIC_SITE_URL = https://YOUR-SITE.netlify.app
 
 [build]
