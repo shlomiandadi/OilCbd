@@ -1,4 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
+import { blogPostBody, learnPageBody } from './content-bodies';
+import { seedSiteSettings } from './seed-site-settings';
 
 type B = { name: string; href: string };
 
@@ -16,40 +18,6 @@ function blogBreadcrumb(slug: string, title: string): B[] {
     { name: 'בלוג', href: '/blog' },
     { name: title, href: `/blog/${slug}` },
   ];
-}
-
-function md(
-  title: string,
-  phrases: string[],
-  extra: string[] = []
-): string {
-  const p = [...phrases, ...extra].filter(Boolean);
-  const bold = p.slice(0, 8).map((x) => `**${x}**`).join(', ');
-  return `## מבוא
-
-מדריך מקיף אודות **${title}**. אנו משלבים מונחי חיפוש רלוונטיים כגון ${bold}, לצד הקשר של **cbd oil**, **שמן קנאביס רפואי**, **CBD** ו־**שמן CBD** בשוק הישראלי.
-
-## מה חשוב לדעת
-
-- הבחנה בין **שמן זרעי קנאביס** (המכיל בדרך כלל מעט או ללא CBD) לבין שמנים מועשרים ב־**CBD**.
-- מוצרים שונים: **cbd gummies**, **cbd vape pen**, טיפות וקפסולות — לכל פורמט יתרונות שימוש שונים.
-- שמות מותגים ורשתות מוזכרים לצורכי השוואה כללית בלבד (**Happy Garden**, **סופר פארם**) ואינם מהווים המלצה ספציפית.
-
-## שאלות נפוצות
-
-### איך בוחרים מוצר?
-מומלץ לבדוק תיעוד מעבדה, ריכוז **CBD**, ושקיפות היצרן.
-
-### האם שמן קנאביס ממכר או מרדים?
-תלוי בהרכב הפעיל (כולל THC). מוצרי **CBD** מבודדים לרוב אינם יוצרים השפעה פסיכואקטיבית כאשר עומדים בתקן.
-
-### חוקיות
-הרגולציה משתנה — יש לעקוב אחר עדכונים רשמיים בישראל.
-
----
-
-*המאמר לצורכי מידע וקידום אתר בלבד. אינו ייעוץ רפואי; יש להתייעץ עם רופא.*
-`;
 }
 
 export async function seedCms(prisma: PrismaClient) {
@@ -110,8 +78,6 @@ export async function seedCms(prisma: PrismaClient) {
     seoDescription: string;
     seoKeywords: string;
     phrases: string[];
-    /** אם לא מוגדר — נבנה מתבנית md() */
-    bodyMarkdown?: string;
   };
 
   const pages: PageDef[] = [
@@ -414,34 +380,6 @@ export async function seedCms(prisma: PrismaClient) {
         'מדיניות הפרטיות של אתר OilCbd — סוגי מידע שנאסף, שימוש, עוגיות ויצירת קשר.',
       seoKeywords: 'מדיניות פרטיות, הגנת מידע, OilCbd',
       phrases: [],
-      bodyMarkdown: `## מבוא
-
-מסמך זה מתאר בקווים כלליים כיצד **OilCbd** עשוי לאסוף ולעבד מידע בעת שימוש באתר ובביצוע הזמנות.
-
-## איזה מידע נאסף
-
-- פרטי קשר שמסרתם במסגרת הזמנה (שם, טלפון, דוא״ל, כתובת משלוח).
-- נתונים טכניים בסיסיים (כגון סוג דפדפן) לצורך תפעול מאובטח של האתר.
-
-## שימוש במידע
-
-המידע משמש לעיבוד הזמנות, תמיכה בלקוחות ושיפור השירות — בהתאם לחוק החל בישראל.
-
-## עוגיות
-
-האתר עשוי להשתמש בעוגיות לשמירת העדפות ולניתוח תנועה בסיסי. ניתן להגדיר את הדפדפן לחסימת עוגיות.
-
-## שמירה ואבטחה
-
-אנו פועלים לנקוט אמצעים סבירים להגנה על מידע — ללא התחייבות לרמת אבטחה מוחלטת.
-
-## יצירת קשר
-
-לשאלות בנוגע למדיניות זו, פנו אלינו דרך פרטי הקשר המופיעים באתר.
-
----
-
-*טקסט כללי להתאמה משפטית מלאה לפי ייעוץ עו״ד ורגולציה עדכנית.*`,
     },
   ];
 
@@ -452,7 +390,7 @@ export async function seedCms(prisma: PrismaClient) {
         categoryId: catIds[p.category],
         title: p.title,
         excerpt: p.seoDescription.slice(0, 200),
-        bodyMarkdown: p.bodyMarkdown ?? md(p.title, p.phrases),
+        bodyMarkdown: learnPageBody(p.slug, p.title, p.phrases),
         seoTitle: p.seoTitle,
         seoDescription: p.seoDescription,
         seoKeywords: p.seoKeywords,
@@ -475,7 +413,7 @@ export async function seedCms(prisma: PrismaClient) {
         'מאמר בלוג השוואתי בין טיפות שמן CBD לקפסולות — נוחות, ספיגה ודיוק מינון.',
       seoKeywords: 'שמן cbd, קפסולות cbd, cbd oil',
       excerpt: 'השוואה קצרה בין פורמטים פופולריים של CBD.',
-      bodyMarkdown: md('שמן CBD מול קפסולות', ['שמן CBD', 'קפסולות', 'cbd oil']),
+      phrases: ['שמן CBD', 'קפסולות', 'cbd oil', 'שמן קנאביס'],
     },
     {
       slug: 'how-to-read-cbd-label',
@@ -486,7 +424,7 @@ export async function seedCms(prisma: PrismaClient) {
         'מדריך בלוג: מה לחפש בתווית — ריכוז CBD, מלא ספקטרום, ומקור.',
       seoKeywords: 'שמן קנאביס, תווית, cbd',
       excerpt: 'טיפים לקריאת תווית מוצר אחראית.',
-      bodyMarkdown: md('תווית CBD', ['תווית', 'שמן קנאביס', 'CBD', 'מלא ספקטרום']),
+      phrases: ['תווית', 'שמן קנאביס', 'CBD', 'מלא ספקטרום', 'cbd oil'],
     },
     {
       slug: 'cbd-and-sleep-myths',
@@ -497,7 +435,7 @@ export async function seedCms(prisma: PrismaClient) {
         'מאמר בלוג על חיפושים הקושרים CBD לשינה — גישה זהירה ומבוססת שקיפות.',
       seoKeywords: 'cbd, שינה, שמן cbd',
       excerpt: 'פרקים קצרים על מיתוסים נפוצים.',
-      bodyMarkdown: md('CBD ושינה', ['CBD', 'שינה', 'שמן CBD', 'טיפות CBD לשינה']),
+      phrases: ['CBD', 'שינה', 'שמן CBD', 'טיפות CBD לשינה'],
     },
   ];
 
@@ -509,7 +447,7 @@ export async function seedCms(prisma: PrismaClient) {
         categoryId: catIds[post.category],
         title: post.title,
         excerpt: post.excerpt,
-        bodyMarkdown: post.bodyMarkdown,
+        bodyMarkdown: blogPostBody(post.slug, post.title, post.phrases),
         coverImage: null,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
@@ -537,15 +475,9 @@ export async function seedCms(prisma: PrismaClient) {
     await prisma.siteNavLink.create({ data: n });
   }
 
-  await prisma.siteSetting.create({
-    data: {
-      key: 'footer.disclaimer',
-      value:
-        'המידע באתר מיועד לידע כללי ולקידום אתר בלבד. אינו מהווה ייעוץ רפואי, משפטי או וטרינרי. יש להתייעץ עם איש מקצוע לפני שימוש במוצרי CBD או קנאביס, במיוחד אם אתם בהריון, מניקים, נוטלים תרופות או סובלים ממחלה כרונית.',
-    },
-  });
+  await seedSiteSettings(prisma);
 
   console.log(
-    `CMS: ${pages.length} עמודי תוכן, ${posts.length} פוסטים, קטגוריות וניווט.`
+    `CMS: ${pages.length} עמודי תוכן, ${posts.length} פוסטים, קטגוריות, ניווט, וטקסטי SiteSetting (דף הבית / הדר / פוטר).`
   );
 }

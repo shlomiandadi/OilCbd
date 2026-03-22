@@ -1,4 +1,11 @@
-export default function DeliveryInfo() {
+import MarkdownBody from '@/components/MarkdownBody';
+
+type Props = {
+  title: string;
+  bodyMarkdown: string;
+};
+
+export default function DeliveryInfo({ title, bodyMarkdown }: Props) {
   return (
     <div className="rounded-3xl border border-amber-500/15 bg-gradient-to-br from-neutral-900/80 to-neutral-950 p-8 shadow-inner shadow-black/20">
       <div className="flex flex-col items-center gap-8 md:flex-row md:items-start">
@@ -13,15 +20,10 @@ export default function DeliveryInfo() {
           </svg>
         </div>
         <div className="text-center md:text-right">
-          <h3 className="text-xl font-bold text-neutral-100 sm:text-2xl">
-            משלוחים מהירים ודיסקרטיות
-          </h3>
-          <p className="mt-3 leading-relaxed text-neutral-400">
-            מערך חלוקה לכל הארץ — אריזות אטומות ללא לוגו בולט. מתאים ללקוחות שמחפשים{' '}
-            <strong className="font-medium text-neutral-300">שמן CBD</strong>,{' '}
-            <strong className="font-medium text-neutral-300">שמן קנאביס</strong> או מוצרי{' '}
-            <span lang="en">cbd oil</span> עם שקט נפשי בקבלת המשלוח.
-          </p>
+          <h3 className="text-xl font-bold text-neutral-100 sm:text-2xl">{title}</h3>
+          <div className="mt-3 max-w-2xl">
+            <MarkdownBody content={bodyMarkdown} className="prose-sm prose-p:text-neutral-400" />
+          </div>
         </div>
       </div>
     </div>

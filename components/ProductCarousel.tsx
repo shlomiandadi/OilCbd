@@ -18,11 +18,12 @@ export type CarouselCard = {
 type Props = {
   title: string;
   subtitle?: string;
+  hint?: string;
   items: CarouselCard[];
 };
 
 /** גלילה אופקית עם snap — נוח לנייד ול־RTL */
-export default function ProductCarousel({ title, subtitle, items }: Props) {
+export default function ProductCarousel({ title, subtitle, hint, items }: Props) {
   if (items.length === 0) return null;
 
   return (
@@ -34,9 +35,7 @@ export default function ProductCarousel({ title, subtitle, items }: Props) {
         {subtitle ? (
           <p className="mt-1 max-w-2xl text-neutral-400">{subtitle}</p>
         ) : null}
-        <p className="mt-2 text-sm text-neutral-500">
-          גלילה אופקית — גררו עם האצבע או עם העכבר
-        </p>
+        {hint ? <p className="mt-2 text-sm text-neutral-500">{hint}</p> : null}
       </div>
 
       <div className="relative -mx-4 px-4 sm:mx-0 sm:px-0">

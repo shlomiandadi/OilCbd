@@ -5,6 +5,8 @@ import ProductCard from '@/components/ProductCard';
 import ProductCarousel, { type CarouselCard } from '@/components/ProductCarousel';
 import DeliveryInfo from '@/components/DeliveryInfo';
 import HomeSeoSection from '@/components/HomeSeoSection';
+import MarkdownBody from '@/components/MarkdownBody';
+import { loadSiteText, parseTrustCards, SITE_TEXT_DEFAULTS } from '@/lib/site-text';
 
 export const dynamic = 'force-dynamic';
 /** Prisma דורש Node.js (לא Edge) — חשוב ב-Netlify */
@@ -14,7 +16,15 @@ type ProductWithVariants = Prisma.ProductGetPayload<{
   include: { variants: true };
 }>;
 
+const HOME_KEYS = Object.keys(SITE_TEXT_DEFAULTS).filter((k) => k.startsWith('home.'));
+
+function homeText(map: Record<string, string>, key: string): string {
+  return map[key] ?? SITE_TEXT_DEFAULTS[key] ?? '';
+}
+
 export default async function HomePage() {
+  const home = await loadSiteText(prisma, HOME_KEYS);
+
   let products: ProductWithVariants[] = [];
   let loadError: string | null = null;
 
@@ -55,6 +65,11 @@ export default async function HomePage() {
     promo: i < 3,
   }));
 
+  let trustCards = parseTrustCards(home['home.trust.cardsJson']);
+  if (trustCards.length === 0) {
+    trustCards = parseTrustCards(SITE_TEXT_DEFAULTS['home.trust.cardsJson']);
+  }
+
   return (
     <main className="min-h-screen">
       <section className="relative overflow-hidden border-b border-amber-500/10">
@@ -65,37 +80,38 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_50%,rgba(16,185,129,0.08),transparent)]" />
         <div className="container relative mx-auto max-w-5xl px-4 pb-16 pt-14 text-center sm:px-6 sm:pb-20 sm:pt-20">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-amber-500/90">
-            שמן קנאביס · CBD · cbd oil — משלוח בישראל
+            {homeText(home, 'home.hero.kicker')}
           </p>
           <h1 className="text-balance text-4xl font-extrabold tracking-tight text-neutral-50 sm:text-5xl md:text-6xl">
-            שמן CBD ושמן קנאביס
+            {homeText(home, 'home.hero.title1')}
             <span className="mt-2 block bg-gradient-to-l from-amber-200 to-amber-500 bg-clip-text text-transparent">
-              איכות פרימיום לבחירה נוחה
+              {homeText(home, 'home.hero.title2')}
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-neutral-400">
-            טיפות, ריכוזים שונים ומידע מקצועי על <strong>CBD</strong>,{' '}
-            <strong>שמן קנאביס רפואי</strong> ומוצרים נלווים — הזמנה מהירה, אריזה דיסקרטית
-            ומדריכים לקידום אתר ולשקיפות.
-          </p>
+          <div className="mx-auto mt-6 max-w-2xl text-pretty">
+            <MarkdownBody
+              content={homeText(home, 'home.hero.leadMarkdown')}
+              className="prose-lg prose-p:leading-relaxed prose-p:text-neutral-400"
+            />
+          </div>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="/#catalog"
+              href={homeText(home, 'home.hero.ctaPrimaryHref')}
               className="inline-flex min-w-[200px] items-center justify-center rounded-full bg-gradient-to-l from-amber-500 to-amber-600 px-8 py-3.5 text-base font-bold text-neutral-950 shadow-lg shadow-amber-500/30 transition hover:brightness-110"
             >
-              לצפייה במוצרים
+              {homeText(home, 'home.hero.ctaPrimary')}
             </Link>
             <Link
-              href="/learn"
+              href={homeText(home, 'home.hero.ctaSecondaryHref')}
               className="inline-flex min-w-[200px] items-center justify-center rounded-full border border-neutral-600 bg-neutral-900/80 px-8 py-3.5 text-base font-semibold text-neutral-200 transition hover:border-amber-500/50 hover:text-amber-400"
             >
-              מדריכי CBD ושמן קנאביס
+              {homeText(home, 'home.hero.ctaSecondary')}
             </Link>
             <Link
-              href="/blog"
+              href={homeText(home, 'home.hero.ctaBlogHref')}
               className="text-sm font-medium text-amber-500/90 underline-offset-4 hover:text-amber-400 hover:underline"
             >
-              בלוג
+              {homeText(home, 'home.hero.ctaBlog')}
             </Link>
           </div>
         </div>
@@ -103,17 +119,13 @@ export default async function HomePage() {
 
       <section className="border-b border-neutral-800/80 bg-neutral-950/50">
         <div className="container mx-auto grid max-w-5xl gap-6 px-4 py-10 sm:grid-cols-3 sm:px-6">
-          {[
-            { t: 'משלוח דיסקרטי', d: 'אריזות ניטרליות — מתאים לחיפושי GEO בישראל' },
-            { t: 'מגוון ריכוזים', d: 'שמן CBD, וריאציות ומידע על cbd oil ופורמטים' },
-            { t: 'מדריכים ומאמרים', d: 'עמודי תוכן עם מילות מפתח וזנב ארוך' },
-          ].map((x) => (
+          {trustCards.map((x) => (
             <div
-              key={x.t}
+              key={x.title}
               className="rounded-2xl border border-neutral-800/90 bg-neutral-900/40 p-5 text-center sm:text-right"
             >
-              <h2 className="text-sm font-bold text-amber-400">{x.t}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-500">{x.d}</p>
+              <h2 className="text-sm font-bold text-amber-400">{x.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-500">{x.body}</p>
             </div>
           ))}
         </div>
@@ -122,24 +134,25 @@ export default async function HomePage() {
       {cards.length > 0 ? (
         <div className="container mx-auto max-w-6xl px-4 py-14 sm:px-6">
           <ProductCarousel
-            title="מבצעים והמלצות מהקטלוג"
-            subtitle="מחירים אטרקטיביים — הזדמנות לנסות שמן CBD או וריאציה חדשה. הזמינות לפי המלאי במערכת."
+            title={homeText(home, 'home.carousel.title')}
+            subtitle={homeText(home, 'home.carousel.subtitle')}
+            hint={homeText(home, 'home.carousel.hint')}
             items={carouselItems}
           />
         </div>
       ) : null}
 
       <div className="container mx-auto max-w-6xl px-4 pb-6 sm:px-6">
-        <HomeSeoSection />
+        <HomeSeoSection markdown={homeText(home, 'home.seo.markdown')} />
       </div>
 
       <section id="catalog" className="scroll-mt-24">
         <div className="container mx-auto max-w-6xl px-4 py-14 sm:px-6">
           <div className="mb-10 text-center sm:text-right">
-            <h2 className="text-3xl font-bold text-neutral-100">כל המוצרים בקטלוג</h2>
-            <p className="mt-2 text-neutral-400">
-              בחרו וריאציה — כל מוצר מקושר לדף SEO ייעודי
-            </p>
+            <h2 className="text-3xl font-bold text-neutral-100">
+              {homeText(home, 'home.catalog.title')}
+            </h2>
+            <p className="mt-2 text-neutral-400">{homeText(home, 'home.catalog.subtitle')}</p>
           </div>
 
           {cards.length === 0 ? (
@@ -210,7 +223,10 @@ export default async function HomePage() {
       </section>
 
       <div className="container mx-auto max-w-4xl px-4 pb-16 sm:px-6">
-        <DeliveryInfo />
+        <DeliveryInfo
+          title={homeText(home, 'home.delivery.title')}
+          bodyMarkdown={homeText(home, 'home.delivery.bodyMarkdown')}
+        />
       </div>
     </main>
   );
