@@ -1,12 +1,20 @@
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import CartControls from '@/components/CartControls';
+import { FALLBACK_HEADER_NAV } from '@/lib/site-nav-fallback';
+
+export const runtime = 'nodejs';
 
 export default async function SiteHeader() {
-  const links = await prisma.siteNavLink.findMany({
-    where: { section: 'header' },
-    orderBy: { sortOrder: 'asc' },
-  });
+  let links = FALLBACK_HEADER_NAV;
+  try {
+    links = await prisma.siteNavLink.findMany({
+      where: { section: 'header' },
+      orderBy: { sortOrder: 'asc' },
+    });
+  } catch (e) {
+    console.error('[SiteHeader] siteNavLink.findMany failed:', e);
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur-md">

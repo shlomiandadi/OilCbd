@@ -1,14 +1,29 @@
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
+import {
+  FALLBACK_FOOTER_DISCLAIMER,
+  FALLBACK_FOOTER_NAV,
+} from '@/lib/site-nav-fallback';
+
+export const runtime = 'nodejs';
 
 export default async function SiteFooter() {
-  const [footerLinks, disclaimer] = await Promise.all([
-    prisma.siteNavLink.findMany({
-      where: { section: 'footer' },
-      orderBy: { sortOrder: 'asc' },
-    }),
-    prisma.siteSetting.findUnique({ where: { key: 'footer.disclaimer' } }),
-  ]);
+  let footerLinks = FALLBACK_FOOTER_NAV;
+  let disclaimer: { value: string } | null = null;
+
+  try {
+    const [nav, disc] = await Promise.all([
+      prisma.siteNavLink.findMany({
+        where: { section: 'footer' },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      prisma.siteSetting.findUnique({ where: { key: 'footer.disclaimer' } }),
+    ]);
+    footerLinks = nav;
+    disclaimer = disc;
+  } catch (e) {
+    console.error('[SiteFooter] prisma footer queries failed:', e);
+  }
 
   return (
     <footer className="mt-auto border-t border-neutral-800 bg-neutral-950">
@@ -35,8 +50,7 @@ export default async function SiteFooter() {
               הצהרה
             </h2>
             <p className="text-sm leading-relaxed text-neutral-500">
-              {disclaimer?.value ??
-                'המידע באתר מיועד לידע כללי בלבד ואינו מהווה ייעוץ רפואי, משפטי או מקצועי. יש להתייעץ עם רופא לפני שימוש במוצרי CBD או קנאביס.'}
+              {disclaimer?.value ?? FALLBACK_FOOTER_DISCLAIMER}
             </p>
           </div>
         </div>

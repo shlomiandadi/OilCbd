@@ -1,6 +1,18 @@
+const DEFAULT_SITE_URL = 'http://localhost:3000';
+
 /** כתובת האתר הבסיסית (לקנוניקל ו־Open Graph). הגדר ב־.env: NEXT_PUBLIC_SITE_URL */
 export function getSiteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL)
+    .replace(/\/$/, '')
+    .trim();
+  if (!raw) return DEFAULT_SITE_URL;
+  try {
+    new URL(raw);
+    return raw;
+  } catch {
+    console.warn('[getSiteUrl] NEXT_PUBLIC_SITE_URL לא תקין, משתמשים בברירת מחדל:', raw);
+    return DEFAULT_SITE_URL;
+  }
 }
 
 export function absoluteUrl(path: string): string {
