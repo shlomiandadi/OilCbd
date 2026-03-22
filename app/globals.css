@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* טפסים ושדות — טקסט ברור על רקע כהה (דפדפנים שונים) */
+  input,
+  textarea,
+  select {
+    @apply text-neutral-100;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-neutral-500;
+  }
+}
