@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import ProductCard from '@/components/ProductCard';
 import DeliveryInfo from '@/components/DeliveryInfo';
@@ -52,8 +53,19 @@ export default async function HomePage() {
         <h1 className="mb-4 text-center text-4xl font-bold text-neutral-100">
           שמן CBD פרימיום
         </h1>
-        <p className="mb-12 text-center text-neutral-400">
+        <p className="mb-6 text-center text-neutral-400">
           בחרו מוצר ווריאציה — משלוח מהיר ודיסקרטי
+        </p>
+        <p className="mb-12 flex flex-wrap items-center justify-center gap-4 text-center text-sm text-neutral-500">
+          <Link href="/learn" className="text-amber-500/90 hover:text-amber-400">
+            מדריכים ומילות מפתח
+          </Link>
+          <span className="text-neutral-700" aria-hidden>
+            |
+          </span>
+          <Link href="/blog" className="text-amber-500/90 hover:text-amber-400">
+            בלוג
+          </Link>
         </p>
         {cards.length === 0 ? (
           <div className="mx-auto max-w-xl text-center text-neutral-500">

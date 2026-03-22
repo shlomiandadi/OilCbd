@@ -98,6 +98,7 @@ model ContentCategory {
   posts          BlogPost[]
 
   @@index([slug])
+  @@map("content_category")
 }
 
 /// עמודי תוכן סמכותיים (מילות מפתח / זנב ארוך) — נמשכים מהמסד
@@ -123,6 +124,7 @@ model ContentPage {
 
   @@index([categoryId])
   @@index([slug])
+  @@map("content_page")
 }
 
 /// מאמרי בלוג
@@ -148,6 +150,7 @@ model BlogPost {
 
   @@index([categoryId])
   @@index([slug])
+  @@map("blog_post")
 }
 
 /// קישורי הדר / פוטר (SEO — טקסט עוגן ברור)
@@ -159,10 +162,13 @@ model SiteNavLink {
   sortOrder Int    @default(0)
 
   @@index([section])
+  @@map("site_nav_link")
 }
 
 /// טקסטים גלובליים (פוטר משפטי וכו׳)
 model SiteSetting {
   key   String @id
   value String @db.Text
+
+  @@map("site_setting")
 }

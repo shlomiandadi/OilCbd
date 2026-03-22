@@ -6,7 +6,8 @@
 #   NEXT_PUBLIC_SITE_URL = https://YOUR-SITE.netlify.app
 
 [build]
-  command = "npm run build"
+  # מיגרציות יוצרות את טבלאות ה-CMS (content_page, blog_post וכו׳) — דורש DATABASE_URL גם בשלב Build
+  command = "npx prisma migrate deploy && npm run build"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

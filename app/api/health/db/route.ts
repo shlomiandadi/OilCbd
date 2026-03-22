@@ -54,11 +54,50 @@ export async function GET() {
     await prisma.$queryRaw`SELECT 1`;
     const productCount = await prisma.product.count();
     const variantCount = await prisma.productVariant.count();
+
+    let cms: Record<string, unknown> = {};
+    try {
+      const [
+        contentCategoryCount,
+        contentPageCount,
+        blogPostCount,
+        siteNavLinkCount,
+        siteSettingCount,
+      ] = await Promise.all([
+        prisma.contentCategory.count(),
+        prisma.contentPage.count(),
+        prisma.blogPost.count(),
+        prisma.siteNavLink.count(),
+        prisma.siteSetting.count(),
+      ]);
+      cms = {
+        contentCategoryCount,
+        contentPageCount,
+        blogPostCount,
+        siteNavLinkCount,
+        siteSettingCount,
+        tableNamesHint:
+          'במסד: content_category, content_page, blog_post, site_nav_link, site_setting',
+      };
+    } catch (cmsErr) {
+      const code =
+        cmsErr && typeof cmsErr === 'object' && 'code' in cmsErr
+          ? String((cmsErr as { code: string }).code)
+          : undefined;
+      cms = {
+        cmsTables: 'error',
+        prismaCode: code,
+        hintHe:
+          'טבלאות CMS חסרות או לא מסונכרנות. הריצו: npx prisma migrate deploy (וב-Netlify ודאו DATABASE_URL ב-Build). אחר כך פעם אחת: npx prisma db seed',
+      };
+    }
+
     return NextResponse.json({
       ok: true,
       database: 'connected',
       productCount,
       variantCount,
+      ...cms,
     });
   } catch (e) {
     const message =
