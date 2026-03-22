@@ -41,7 +41,7 @@ npm run dev
 
 ### המוצרים לא מופיעים בלייב (Netlify)
 
-1. **Site configuration → Environment variables** — ודאו ש־`DATABASE_URL` קיים עבור **Production** (אותו ערך כמו ב־`.env` המקומי). אל תכללו מרכאות בשדה הערך.
+1. **Site configuration → Environment variables** — ודאו ש־`DATABASE_URL` קיים עבור **Production** (אותו ערך כמו ב־`.env` המקומי). **אל תכניסו מרכאות** `"..."` סביב המחרוזת בשדה של Netlify — אם יש מרכאות, Prisma מדווח שה־URL לא מתחיל ב־`postgresql://`. הערך חייב להתחיל בדיוק ב־`postgresql://`.
 2. הוסיפו **`NEXT_PUBLIC_SITE_URL`** עם כתובת האתר המלאה (למשל `https://oil-cbd.netlify.app`).
 3. **Deploys → Trigger deploy → Clear cache and deploy site**.
 4. מהטרמינל המקומי (עם `DATABASE_URL` זהה ב־`.env`): `npx prisma migrate deploy` ואז `npx prisma db seed`.
