@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'http://localhost:3000';
+const DEFAULT_SITE_URL = 'https://oil-cbd.netlify.app/';
 
 /** כתובת האתר הבסיסית (לקנוניקל ו־Open Graph). הגדר ב־.env: NEXT_PUBLIC_SITE_URL */
 export function getSiteUrl(): string {
